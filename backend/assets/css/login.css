@@ -29,13 +29,7 @@ body
 {
     width: 278px;
 
-    background: #f2f2f2 repeat-x left bottom;
-    background-image: -ms-linear-gradient(top, #fafafa, #f2f2f2);
-    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#fafafa), to(#f2f2f2));
-    background-image: -webkit-linear-gradient(top, #fafafa, #f2f2f2);
-    background-image: -o-linear-gradient(top, #fafafa, #f2f2f2);
-    background-image: -moz-linear-gradient(top, #fafafa, #f2f2f2);
-    background-image: linear-gradient(top, #fafafa, #f2f2f2);
+   background-color:#373636;
 
     margin: auto;
     position: relative;

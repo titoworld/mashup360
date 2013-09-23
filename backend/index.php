@@ -14,7 +14,7 @@
 <link rel="stylesheet" href="assets/css/login.css" media="screen">
 <link rel="stylesheet" href="plugins/zocial/zocial.css" media="screen">
 <script src="assets/js/libs/parse.js"></script>
-<title>GALF :: Administración Backend</title>
+<title>Mashup360 :: Administració Backend</title>
 
 </head>
 
