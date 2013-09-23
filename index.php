@@ -9,13 +9,13 @@
 		<li><span class="topMenuOption">&nbsp;Informar sobre un error</span></li>
 	</ul>
 </nav>
-<div id="socialButtons"><img src=""</div>
+<div id="socialButtons"><img class="littleButton" src="<? echo IMAGE_DOMAIN; ?>fb_logo.png" alt="logoFacebook" /><img class="littleButton" src="<? echo IMAGE_DOMAIN; ?>tw_logo.png" alt="logotwitter"/></div>
 </header>
 <div id="content">
 	<div id="POIs">
 		 <?  include("pages/POIs.php");  ?>  
 	</div>
-	<div id="viewer360"> <iframe src="https://googledrive.com/host/0Bxv48jdysarPb09ZUEo2WmJlTXM/gilda_in.html"></iframe></div>
+	<!-- <div id="viewer360"> <iframe src="https://googledrive.com/host/0Bxv48jdysarPb09ZUEo2WmJlTXM/gilda_in.html"></iframe></div> !-->
 	<div id="section">
 		  <?  include("pages/googlemaps.php");  ?>   
 	</div>

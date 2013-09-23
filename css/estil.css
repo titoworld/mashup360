@@ -91,3 +91,11 @@ div.POIElement:hover{
 	background-color: #555;
 	cursor:pointer;
 }
+#socialButtons{
+position: absolute;
+right: 10px;
+top: 10px;
+}
+.littleButton{
+	margin-left:5px;
+}

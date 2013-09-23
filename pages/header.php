@@ -14,12 +14,16 @@ define("PLUGINS_DOMAIN","http://plugins.farrepuche.com/");
 <link href='<? echo STYLE_DOMAIN ?>estil.css' rel="stylesheet" type="text/css" />
 <link href='<? echo STYLE_DOMAIN ?>jquery.window.css' rel="stylesheet" type="text/css" />
 <link href='<? echo STYLE_DOMAIN ?>dataTable.css' rel="stylesheet" type="text/css" />
-<script src='http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js'></script>
-<!-- <script src='http://code.jquery.com/jquery-1.8.3.min.js'></script> !-->
-<script src='http://code.jquery.com/ui/1.10.3/jquery-ui.js'></script>
+<script src='<? echo SCRIPT_DOMAIN ?>jquery2.js'></script>
+<script src='<? echo SCRIPT_DOMAIN ?>jquery-ui.min.js'></script>
 <script type="text/javascript" language="javascript" src='<? echo PLUGINS_DOMAIN ?>/dataTables/js/jquery.dataTables.js'></script>
-<script src='<? echo SCRIPT_DOMAIN ?>mashup.js'></script>
+<script src='<? echo SCRIPT_DOMAIN ?>markerclustererPlus.js'></script>
+<script src='<? echo SCRIPT_DOMAIN ?>infobubble.min.js'></script>
+<!--<script src='<? echo PLUGINS_DOMAIN ?>gmap3/gmap3.js'></script>!-->
+<script src='<? echo SCRIPT_DOMAIN ?>jquery-uimap.js'></script>
 <script src='<? echo SCRIPT_DOMAIN ?>jquery.browser.js'></script>
 <script src='<? echo SCRIPT_DOMAIN ?>jquery.window.min.js'></script>
+<script src='<? echo SCRIPT_DOMAIN ?>mashup.js'></script>
+
 </head>
 

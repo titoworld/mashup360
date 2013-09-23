@@ -8,7 +8,6 @@ googleMaps = {
         };
         googleMaps.map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
         googleMaps.poiTable();
-        googleMaps.tooltip();
         googleMaps.toggleViewer();
 	},
 	get_API_URL: function() {
@@ -72,41 +71,74 @@ googleMaps = {
 				  googleMaps.map_recenter(map,myLatlng,0,100);
 		    });
 	},
-	tooltip: function() {
-			$( document ).tooltip({
-	      position: {
-	        my: "center bottom-20",
-	        at: "center top",
-	        using: function( position, feedback ) {
-	          $( this ).css( position );
-	          $( "<div>" )
-	            .addClass( "arrow" )
-	            .addClass( feedback.vertical )
-	            .addClass( feedback.horizontal )
-	            .appendTo( this );
-	        }
-	      }
-	    });
-	},
-	getLocationParameters: function(address){
+		clusteringMarkers: function(markers){
+			var markerClusterer = new MarkerClusterer(googleMaps.map, markers, {styles: googleMaps.clusterStyles, maxZoom:13});
+				markerClusterer.setGridSize(15);
+				$('.map_container').gmap('set', 'MarkerClusterer', markerClusterer);
+				console.log(googleMaps.clusterStyles);	  	
+		},
+		
+		getLocationParameters: function(value,lastIteration){
 		var geocoder = new google.maps.Geocoder();
+		var address=googleMaps.direccio = value["POI_postal"] + "," + value["POI_ciutat"];
+		googleMaps.pointsArray=[];
+		googleMaps.clusterStyles=[];
+		var map = googleMaps.map;
 		geocoder.geocode( { 'address': address}, function(results, status) {
 		if (status == google.maps.GeocoderStatus.OK) {
        		 googleMaps.map.setCenter(results[0].geometry.location);
-       		 console.log(address +" " + results[0].geometry.location);
-       		 var marker = new google.maps.Marker({
-	       		 map: googleMaps.map,
-	       		 position: results[0].geometry.location
-	       	});
-	    } else {
-        	alert("Geocode was not successful for the following reason: " + status);
-        }
-    });
-		  
+       		       		 $('.map_container').gmap('addMarker', 
+								{
+									'position': results[0].geometry.location.lat()+','+results[0].geometry.location.lng(), 
+									'bounds': true, 
+									'icon': new google.maps.MarkerImage('http://images.farrepuche.com/green_marker.png',    
+										new google.maps.Size(29,40), 
+										new google.maps.Point(0,0), 
+										new google.maps.Point(0,40)
+									)
+								},
+								function(map, marker){
+								googleMaps.map=map;
+									$(marker).click(function(){
+										var bubble = new InfoBubble({ 
+								          content: "<span>"+value['POI_name']+"</span>", 
+								          map:googleMaps.map,
+								          shadowStyle: 1, 
+								          padding: 0, 
+								          backgroundColor: 'rgb(255,255,255)', 
+								          arrowSize: 10, 
+								          borderWidth: 1,  
+								          borderColor: 'lightgray', 
+								          disableAutoPan: false, 
+								          hideCloseButton: false, 
+								          arrowPosition: 50, 
+								          backgroundClassName: '', 
+								          arrowStyle: 0 
+								        });
+								        bubble.open(map, marker);
+										
+									});		
+								}
+							);	
+						    googleMaps.clusterStyles.push({
+							    opt_textColor: 'transparent',
+							    textColor: '#000000',
+							    url: 'http://images.farrepuche.com/green_cluster.png',
+							    height: 35,
+							    width: 35
+							});
+								if (lastIteration == true){
+								googleMaps.clusteringMarkers($('.map_container').gmap('get', 'markers'));
+							}
+					}
+					 else {
+						 alert("Geocode was not successful for the following reason: " + status);
+        			}
+				});
+					
+
 	},
-	clickPOI:function (direccio) {
-			console.log(googleMaps.getLocationParameters(direccio));
-	},
+
 	poiTable: function() {
 		var POITableList;
 		var ampleFinestra=200;
@@ -117,11 +149,16 @@ googleMaps = {
 			"llista_POIs",
 			function(data){	
 				$.each(data.llistaPOI, function(index,value){
-				googleMaps.direccio = value["POI_postal"] + "," + value["POI_ciutat"];
-				//'<input type="button" onClick="gotoNode(\'' + result.name + '\')" />'
-					$("#llistaPOI").append('<li><div onclick="googleMaps.getLocationParameters(\''+googleMaps.direccio+'\')" class="POIElement" id="POI'+value["id"]+'"><span>'+value["POI_name"]+'</span></div></li>');
+				if (index == data.llistaPOI.length -1) {
+					googleMaps.getLocationParameters(value,true);
+				}
+				else{
+					googleMaps.getLocationParameters(value,false);
+				}
+				$("#llistaPOI").append('<li><div onclick="googleMaps.getLocationParameters(\''+value+'\')" class="POIElement" id="POI'+value["id"]+'"><span>'+value["POI_name"]+'</span></div></li>');
 					
 				});
+				
 				POITableList= $.window({
 					   icon: "http://www.fstoke.me/favicon.ico",
 					   width: ampleFinestra,
