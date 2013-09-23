@@ -45,8 +45,8 @@
 <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->
 
-<title>GALF :: Administración Backend</title>
-<script src="js/parse.js"></script>
+<title>Mashup360 :: Administración Backend</title>
+
 </head>
 
 <body data-show-sidebar-toggle-button="false" data-fixed-sidebar="false">
@@ -93,25 +93,25 @@
                     	<aside id="sidebar">
                         	<nav id="navigation" class="collapse">
                             	<ul>
-                                	<li id="usuariosLi" class="active">
-                                    	<span title="General">
-                                            <a id="usuariosLink" href="admin.php?section=users">
-                                    		<i class="icon-users"></i>
-											<span class="nav-title">Usuarios</span></a>
-                                        </span>
-                                    	<ul class="inner-nav" id="usuarios">
-                                        </ul>
-                                    </li>
+                                
                                 	<li id="camposLi">
                                     	<span title="Table">
-                                            <a id="camposLink" href="admin.php?section=campos">
+                                            <a id="camposLink" href="admin.php?section=POIS">
                                     		<i class="icon-globe"></i>
-											<span class="nav-title">Campos</span></a>
+											<span class="nav-title">POIs</span></a>
                                         </span>
                                     	<ul class="inner-nav" id="campos">
                                         </ul>
                                     </li>
-                                	
+                                		<li id="usuariosLi" class="active">
+                                    	<span title="General">
+                                            <a id="usuariosLink" href="admin.php?section=users">
+                                    		<i class="icon-users"></i>
+											<span class="nav-title">Usuaris</span></a>
+                                        </span>
+                                    	<ul class="inner-nav" id="usuarios">
+                                        </ul>
+                                    </li>
                                 </ul>
                             </nav>
                         </aside>

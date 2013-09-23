@@ -3,6 +3,7 @@
 <!--[if IE 7]>    <html class="lt-ie9 lt-ie8" lang="en"> <![endif]-->
 <!--[if IE 8]>    <html class="lt-ie9" lang="en"> <![endif]-->
 <!--[if gt IE 8]><!--><html lang="en"><!--<![endif]-->
+<? include("../config.php") ?>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,8 +13,7 @@
 <link rel="stylesheet" href="plugins/uniform/css/uniform.default.css" media="screen">
 <link rel="stylesheet" href="assets/css/fonts/icomoon/style.css" media="screen">
 <link rel="stylesheet" href="assets/css/login.css" media="screen">
-<link rel="stylesheet" href="plugins/zocial/zocial.css" media="screen">
-<script src="assets/js/libs/parse.js"></script>
+
 <title>Mashup360 :: Administració Backend</title>
 
 </head>
@@ -49,6 +49,7 @@
 	<script src="assets/js/libs/jquery.placeholder.min.js"></script>
     
     <!-- Login Script -->
+     <script src="js/md5.js"></script>
      <script src="js/login.js"></script>
     <script src="assets/js/login.js"></script>
     <!-- Validation -->

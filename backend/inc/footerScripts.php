@@ -12,7 +12,7 @@
 <script src="js/jquery.colorPicker.js" type="text/javascript"></script>
 <script src="js/jquery.minicolors.js" type="text/javascript"></script>
 <script src="js/attrChange.js" type="text/javascript"></script>
-<script src="js/galf.js"></script>
+<script src="js/backend.js"></script>
 <script src="bootstrap/js/bootstrap.min.js"></script>
 <script src="assets/js/libs/jquery.placeholder.min.js"></script>
 <script src="assets/js/libs/jquery.mousewheel.min.js"></script>

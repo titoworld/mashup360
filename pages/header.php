@@ -1,15 +1,5 @@
 <? include("config.php") ?>
 <head>
-	<script>
-	window.API_DOMAIN="<? echo API_DOMAIN; ?>";
-	window.BACKEND_DOMAIN="<? echo BACKEND_DOMAIN ?>";
-	window.MAIN_DOMAIN="<? echo MAIN_DOMAIN; ?>";
-	window.STYLE_DOMAIN="<? echo STYLE_DOMAIN; ?>" ;
-	window.SCRIPT_DOMAIN="<? echo SCRIPT_DOMAIN; ?>";
-	window.IMAGE_DOMAIN="<? echo IMAGE_DOMAIN; ?>";
-	window.PLUGINS_DOMAIN="<? echo PLUGINS_DOMAIN; ?>";
-	window.UPLOADS_DOMAIN="<? echo UPLOADS_DOMAIN; ?>";
-	</script>
 	<meta charset="utf-8">
 	<link href='<? echo MAIN_DOMAIN ?>favicon.ico' rel='shortcut icon' type='image/x-icon'/>
 	<link href='<? echo MAIN_DOMAIN ?>favicon.ico' rel='icon' type='image/x-icon'/>  	

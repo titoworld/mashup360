@@ -1,67 +1,47 @@
 <?php
 
 class UserController {
-		
-		static $daemon_user = "mtmdaemon";
-		static $daemon_pass = "MTMmelovendotoo123123";
-		
-    static function checkUser($username) {
-    	$db = DbController::getInstance()->dbManager;
-	    $actualUser = DbController::getInstance()->dbManager->sap_users("TIP = ?", $username)->fetch();
-	    if(!$actualUser)
-	    	return false;
-	    	
-	    return true;
-    }
-    
-    static function checkLegitUser($tip, $dni) {
-		$row = 1;
-		$dni=strtoupper($dni);
-		if (($handle = fopen("./tip/VOLCAT.CSV", "r")) !== FALSE) {
-			while (($data = fgetcsv($handle, 1000, ";")) !== FALSE) {
-				// [0] = TIP; [2] = DNI
-				if($tip == $data[0] && $dni == strtoupper($data[2]))
-					return "OK";
-	
-			}
-			
-			
-			fclose($handle);
-			return "No es troba cap afiliat amb aquestes dades";
-		} else {
-			return "Error obrint el fitxer de validació";
-		}
-	}
-    
-    static function addUser($user) {
-	    $result = DbController::getInstance()->dbManager->sap_users->insert($user);
-	    if(!$result)
+    //genera un token/hash amb el segon de temps actual i l'email de l'usuari i actualitza el expire time del token
+    static function login($username,$password) {
+     $user = DbController::getInstance()->dbManager->publicKey("id= ?", 1)->fetch();
+        if(!$user)
 	    	return NULL;
-	    $result = UserController::generateNewToken($result);
-	    return $result;
-    }
-    
-    static function generateNewToken($user) {
-	    
+	$token = $user["token"];
+    $user = DbController::getInstance()->dbManager->usuaris("nom_usuari= ?", $username)->fetch();
+ 
+        if(!$user)
+	    	return NULL;
+	    $serverHash = md5($user["clau_acces"]."-".$token);
+	    if ($serverHash !=$password){
+		    return NULL;
+	    }
 	    $ts = strftime("%s");
-	    
 	    $newToken = md5($user["email"]."-".$ts);
-	    
 	    $user["token"]=$newToken;   
-	    $user["tokenExpire"]=UserController::getNewTokenExpireTime();
-	    date_default_timezone_set('UTC');
+	    date_default_timezone_set('Europe/Andorra');
 	    $user["lastLogin"]=date("Y-m-d H:i:s",time());
-	    
 	    $user->update();
-	    
 	    return $user;
     }
-    
+    static function generateToken(){
+        date_default_timezone_set('Europe/Andorra');
+	    $user = DbController::getInstance()->dbManager->publicKey("id= ?", 1)->fetch();
+        if(!$user)
+	    	return NULL;
+	    $ts = strftime("%s");
+	    $dateCryp= md5(date("Y-m-d H:i:s",time()));
+	    $newToken = sha1($dateCryp."-".$ts);
+	    $privateToken = sha1(md5($newToken));
+	    $user["token"]=$newToken;  
+	    $user["lastLogin"]=date("Y-m-d H:i:s",time()); 
+	    $user->update();
+	    return $user;
+
+    }
     static function getNewTokenExpireTime() {
-     	date_default_timezone_set('UTC');
+     	date_default_timezone_set('Europe/Andorra');
 	    $dateTime = new DateTime();
-	    $dateTime->add(date_interval_create_from_date_string('30 minutes'));
-	   
+	    $dateTime->add(date_interval_create_from_date_string('15 minutes'));
 	    return date("Y-m-d H:i:s ",$dateTime->getTimestamp());
     }
     
@@ -89,85 +69,7 @@ class UserController {
 	    	$user->update();
 		    return $user;   
 	    }
-    }
-
-    static function checkLogin($password, $TIP) {
-    	
-	    $user = DbController::getInstance()->dbManager->sap_users("password = ? AND TIP = ?", $password, $TIP)->fetch();
-	    if($user == NULL) {
-	    	return NULL;
-	    } else {
-	    	//UserController::updateTokenExpireTime($user);
-	    	$user["lastLogin"]=date("Y-m-d H:i:s ",time());
-	    	$user->update();
-			return $user;   
-	    }
-    }
-    
-    static function checkLoginApp($password, $TIP, $appPlatform, $appToken) {
-    
-    	$user = self::checkLogin($password, $TIP);
-    	
-    	if(!isset($user["appPlatform"]) || $user["appPlatform"] == NULL) {
-	    	$user["appPlatform"] = $appPlatform;
-	    	$user["appToken"] = $appToken;
-	    	$user->update();
-	    	return $user;
-    	} else {
-	    	if($user["appToken"] != $appToken)
-	    		return NULL;
-	    	else {
-	    		//UserController::updateTokenExpireTime($user);
-	    		$user["lastLogin"]=date("Y-m-d H:i:s ",time());
-	    		$user->update();
-	    		return $user;
-	    	}
-    	}
-    	
-    
-	    $user = DbController::getInstance()->dbManager->sap_users("password = ? AND TIP = ? AND appPlatform = ? AND appToken = ?", $password, $TIP, $appPlatform, $appToken)->fetch();
-	    if($user == NULL) {
-	    	return NULL;
-	    } else {
-	    	
-			return $user;   
-	    }
-    }
-    
-    static function llistarUsuaris() {
-    	$db = DbController::getInstance()->dbManager->usuaris();
-    	//var_dump($db);
-    	$userlist = array();
-    	foreach ($db as $usuaris) {
-    		$userData['nom_usuari']= $usuaris['nom_usuari'];
-    		$userData['tipus_usuari']= $usuaris['tipus_usuari'];
-	    	array_push($userlist,$userData);
-	    	
-    	}
-    	return $userlist;
-    }
-    static function delUser($TIP) {
-    	$user = DbController::getInstance()->dbManager->sap_users("TIP = ?", $TIP)->fetch();
-    	$user->delete();
-    }
-    
-    static function modUser($TIP,$isEnabled,$isAdmin) {
-        $user = DbController::getInstance()->dbManager->sap_users("TIP = ?", $TIP)->fetch();
-        if ($isEnabled==1 && $user["enabled"]==0) {
-	       	$user["enabled"]=1;
-	    }
-	    else if($isEnabled==1 && $user["enabled"]==1){
-	  	  $user["enabled"]=0;
-	    }
-	    if ($isAdmin==1 && $user["isAdmin"]==0) {
-	       	$user["isAdmin"]=1;
-	    }
-	    else if ($isAdmin==1 && $user["isAdmin"]==1) {
-	  	  $user["isAdmin"]=0;
-	    }
-	    $user->update();
-    }
-
+    }  
 }
 
 ?>

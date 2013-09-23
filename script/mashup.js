@@ -128,7 +128,7 @@ googleMaps = {
 				$("#viewer360").attr("class","seixantaAmple");
 				$("#section").attr("class","quarantaAmple");
 				if (marker){
-					$("#viewer360").append('<iframe src="'+marker.url+'"></iframe><div id="titleViewBar"><span class="titleLocation">'+marker.title+'</span><div id="toggleCaptionButton">'+googleMaps.displayHTMLImage("slideDownBar.png", "slideDownBar","slideBar")+'</div></div><div id="toggleViewerButton">'+googleMaps.displayHTMLImage("slideBar.png", "slideLeftBar","slideBar")+'</div>');
+					$("#viewer360").append('<iframe src="'+marker.url+'"></iframe><div id="titleViewBar"><span id="titleCaptionText" class="titleLocation">'+marker.title+'</span><div id="toggleCaptionButton">'+googleMaps.displayHTMLImage("slideDownBar.png", "slideDownBar","slideBar")+'</div></div><div id="toggleViewerButton">'+googleMaps.displayHTMLImage("slideBar.png", "slideLeftBar","slideBar")+'</div>');
 					$("#toggleViewerButton").unbind();
 					$("#toggleViewerButton").click(function(){
 						$("#viewer360").removeClass("seixantaAmple");
@@ -159,7 +159,14 @@ googleMaps = {
 					$("."+value.id).click(function() {
 							googleMaps.closeInfoWindows();
 						    infowindow.open(googleMaps.map,value);
-						    googleMaps.displayPanorama(value);
+						    if ($("#viewer360").hasClass("seixantaAmple") && $("#titleCaptionText").text() == value.title) {				
+						    $("#viewer360").removeClass("seixantaAmple");
+						    $("#section").removeClass("quarantaAmple");
+							    
+						    }
+						    else {
+						    	googleMaps.displayPanorama(value);
+						    }
 					});
 				})
 			},

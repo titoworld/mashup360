@@ -368,6 +368,7 @@ display:none;
 #header .navbar-inner .brand img
 {
     max-height: 100%;
+    margin-top:10px;
 }
 
 /* Header Buttons
