@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!-- prova !-->
 <? include("pages/header.php") ?>
 <body>
 <header class="widthPage"><img src="http://images.farrepuche.com/logo.png" id="logo" alt="logo"/>
