@@ -15,7 +15,7 @@
 	<div id="POIs">
 		 <?  include("pages/POIs.php");  ?>  
 	</div>
-	<!-- <div id="viewer360"> <iframe src="https://googledrive.com/host/0Bxv48jdysarPb09ZUEo2WmJlTXM/gilda_in.html"></iframe></div> !-->
+	 <div id="viewer360"> </div>
 	<div id="section">
 		  <?  include("pages/googlemap.php");  ?>   
 	</div>

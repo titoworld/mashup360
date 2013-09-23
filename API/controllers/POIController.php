@@ -24,7 +24,6 @@ class POIController{
       
 
 
-
     static function listArticlesWord($word) {
 	   	$db = DbController::getInstance()->dbManager->articles;
 	   //	$table = $db->articles;

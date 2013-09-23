@@ -23,7 +23,7 @@ define("PLUGINS_DOMAIN","http://plugins.farrepuche.com/");
 <script src='<? echo SCRIPT_DOMAIN ?>jquery-uimap.js'></script>
 <script src='<? echo SCRIPT_DOMAIN ?>jquery.browser.js'></script>
 <script src='<? echo SCRIPT_DOMAIN ?>jquery.window.min.js'></script>
-
+<script src='<? echo SCRIPT_DOMAIN ?>mashup.js'></script>
 
 </head>
 

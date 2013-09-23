@@ -217,7 +217,7 @@ $app->post("/update_user", function () use($app, $db) {
 	    	 return;
      }
 });
-//llistar tipus de codis 
+//llistar POIS 
 $app->get("/llista_POIs", function () use($app, $db) {
 	$app->response()->header("Content-Type", "application/json");
 	$post = $app->request()->post();
@@ -233,63 +233,30 @@ $app->get("/llista_POIs", function () use($app, $db) {
 });
 
 
-//llistar articles FILLS
-$app->post("/get_articles_fills", function () use($app, $db) {
+//get POI PANORAMIC IMAGE URL
+$app->get('/cerca_POI_URL/:POI', function($POI) use ($app, $db) {
 	$app->response()->header("Content-Type", "application/json");
-	$post = $app->request()->post();
-	$fieldCheck = array("codi","llibre","titol","capitol","seccio");
-    foreach($fieldCheck as $check) {
-	     if(!isset($post[$check])) {
-		     echo wsError(_($check." not provided"));
-		     return;
-		 }
-    }
-	$result = PenalController::listArticlesChild($post['codi'],$post['llibre'],$post['titol'],$post['capitol'],$post['seccio']);
-	 if(!$result) {
-	    	 echo wsError(_("Error listing articles"));
-	    	 return;
-    	 }
-    foreach($result as $llista) {
-    $responseData[] = $llista;
-    }
-     echo wsResponse("articleList", $responseData);
-});
-//Torna la estructura del codi
-$app->get("/getArbre/:tipusCodi", function($tipusCodi) use ($app, $db) {
-	$app->response()->header("Content-Type", "application/json");
-	
-	$llibres = PenalController::listBooks($tipusCodi);
-	
-	for($i=0; $i<sizeof($llibres); $i++) {
-		$llibres[$i]["titols"]=PenalController::listTitles($llibres[$i]["id"],$tipusCodi);
-		
-		for($j=0; $j<sizeof($llibres[$i]["titols"]); $j++) {
-			$llibres[$i]["titols"][$j]["capitols"] = PenalController::listCapitols($llibres[$i]["id"],$llibres[$i]["titols"][$j]["id"],$tipusCodi);
-			
-
-			for($k=0; $k<sizeof($llibres[$i]["titols"][$j]["capitols"]); $k++) {
-				$llibres[$i]["titols"][$j]["capitols"][$k]["seccions"] = PenalController::listSections($llibres[$i]["id"],$llibres[$i]["titols"][$j]["id"],$llibres[$i]["titols"][$j]["capitols"][$k]["id"],$tipusCodi); 
-			}
-			
-
-		}
-		
-	}
-	
-	echo wsResponse("tree", $llibres);
-	
-});
-//llistar UN article
-$app->post("/search_article", function() use ($app, $db) {
-	$app->response()->header("Content-Type", "application/json");
-	$post = $app->request()->post();
-    $user = $db->articles("id_article = ? AND id_tipus_codi= ?", $post["article"], $post["tipusCodi"])->fetch();
-    if(!$user)
-    	echo wsResponse("article", NULL);
+    $result = $db->POIs("POI_id = ?", $POI)->fetch();
+    if(!$result)
+    	echo wsResponse("POI_URL", NULL);
     else {
-    	echo wsResponse("article",  utf8_encode($user["descripcio"]));
+    	echo wsResponse("POI_URL",  utf8_encode($result["POI_360url"]));
     }
 });
+
+$app->post("/search_TIP", function() use ($app, $db) {
+	$app->response()->header("Content-Type", "application/json");
+	$post = $app->request()->post();
+    $user = $db->sap_users("TIP = ?", $post["TIP"])->fetch();
+    if(!$user)
+    	echo wsResponse("TIP", NULL);
+    else {
+    	echo wsResponse("TIP", $user["TIP"]);
+    }
+});
+
+
+
 //buscar article per paraula
 $app->post("/search_word", function() use ($app, $db) {
 	$app->response()->header("Content-Type", "application/json");

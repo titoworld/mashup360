@@ -5,7 +5,7 @@ googleMaps = {
 		googleMaps.clusterStyles=[]; 
 			 var myLatlng = new google.maps.LatLng(42.4,0.1);
 			 var mapOptions = {
-				 zoom: 4,
+				 zoom: 8,
 				 center: myLatlng,
 				 mapTypeId: google.maps.MapTypeId.ROADMAP
 				 };
@@ -75,7 +75,7 @@ googleMaps = {
 		            }
 		        });
 			},
-			reattach: function(){
+			linkListMarker: function(){
 				$.each(googleMaps.markerArray, function(index,value){
 					googleMaps.infowindow = new google.maps.InfoWindow({
 						content: value.contentBubble
@@ -103,7 +103,7 @@ googleMaps = {
 							   title: "Llista de POIs",
 							   content: $("#POITable").html(), 
 							   onShow: function(wnd){
-								   googleMaps.reattach();
+								   googleMaps.linkListMarker();
 							   },
 							  // footerContent: "<img style='vertical-align:middle;' src='img/star.png'> This is a nice plugin :^)"
 							  footerContent: "Selecciona el POI"
