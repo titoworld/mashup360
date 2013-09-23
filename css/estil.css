@@ -86,6 +86,7 @@ div.POIElement{
 	color:white;
 	background-color: #333;
 	border-bottom: 1px solid white;
+	cursor:pointer;
 }
 div.POIElement:hover{
 	background-color: #555;

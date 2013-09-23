@@ -5,7 +5,9 @@ class POIController{
     	$typelist = array();
     	foreach ($db as $types) {
     		$userData['id']= $types['id'];
+    		$userData['POI_id']= $types['POI_id'];
     		$userData['POI_name']= $types['POI_name'];
+    		$userData['POI_description']= $types['POI_description'];
     		$userData['POI_telefon']= $types['POI_telefon'];
     		$userData['POI_email']= $types['POI_email'];
     		$userData['POI_postal']= $types['POI_postal'];

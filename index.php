@@ -17,7 +17,7 @@
 	</div>
 	<!-- <div id="viewer360"> <iframe src="https://googledrive.com/host/0Bxv48jdysarPb09ZUEo2WmJlTXM/gilda_in.html"></iframe></div> !-->
 	<div id="section">
-		  <?  include("pages/googlemaps.php");  ?>   
+		  <?  include("pages/googlemap.php");  ?>   
 	</div>
 </div>
 </body>

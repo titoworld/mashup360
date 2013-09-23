@@ -1,0 +1,1129 @@
+;var galf = galf || {};
+galf = { 
+	connectToParse: function() {
+		var applicationId = "cfZHQ6k3IoPCcQBmXmwmuO9tb0fpVxDZUmgCWBXd";
+ 		var javaScriptKey = "2xfMrgnnxUUpib0CCu2tepB7IWCvs4D01f83bM2w";
+ 		Parse.initialize(applicationId, javaScriptKey);
+	},
+	getUrlVars: function() {
+		    var vars = {};
+		    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+		        vars[key] = value;
+		    });
+		    return vars;
+	 },
+	getUsers: function() {
+		galf.connectToParse();
+		var usersTable = $('#usersTable').dataTable({ "aoColumnDefs": [ { "bSortable": false, "aTargets": [ 0 ] } ], iDisplayLength:100 });
+		var Users = Parse.Object.extend("User");
+		var UsersCollection = Parse.Collection.extend({
+  			model: Users
+		});
+		var Usrcollection = new UsersCollection();
+		Usrcollection.fetch({
+ 		 	success: function(collection) {
+  		 		 collection.each(function(object) {
+  		 		 	console.debug(object);
+  		 		 	var username = object.get('username');
+  		 		 	var name = object.get('name');
+  		 		 	var id= object.id;
+  		 		 	var photoProf;
+  		 		 	var cognom = object.get('lastName');
+  		 		 	var club = object.get('club');
+  		 		 	var city = object.get('city');
+  		 		 	var email = object.get('email');
+  		 		 	if(!cognom){
+  		 		 		cognom="-";
+  		 		 	}
+  		 		 	if (!email){
+  		 		 		email="-";
+  		 		 	}
+  		 		 	if(!city) {
+  		 		 		city="-";
+  		 		 	}
+  		 		 	if(!club) {
+  		 		 		club="-";
+  		 		 	}
+  		 		 	if(!email) {
+  		 		 		email="-";
+  		 		 	}
+  		 		 	
+      				var a = usersTable.fnAddData([username,'<a href="#" id="darBaja-'+ object.id+ '" class="btn btn-danger"><i class="icon-users"></i> Dar de baja</a>',name+" "+cognom,email,club,city]);  				
+					$("#darBaja-"+object.id).unbind();
+					$("#darBaja-"+object.id).click(function() {
+							var query = new Parse.Query(Parse.User);
+					        query.get(object.id, {
+					          success: function(userAgain) {
+					            userAgain.set("status", "disable");
+					            userAgain.save(null, {
+					            	error: function(userAgain, error) {
+					            		console.log(error);
+					            	}
+					            });
+					           }
+							});
+					});	
+					
+					var relation = object.relation("avatar");
+					relation.query().find({
+  						success: function(list) {
+    						$.each(list,function(value, index) {
+    							photoProf=list[value].get('imageFile').url();
+    						});
+  						}
+					});
+
+      				$("#"+id).unbind();
+      				$("#"+id).click(function(e){
+      					  e.preventDefault();
+      					  $("#profilePic").attr('src','images/placeholder.png');
+      					  $("#profilePic").attr('src',photoProf);
+      					  $("#profile-username").text(name + " " + cognom);
+      					  $("#profile-ubication").text(club + ", " + city);
+      					  $("#profile-mail").text(email);
+      					  $("#enviarMensj").unbind();
+      					  $("#enviarMensj").click(function(){		
+      					  });
+      					  $("#darBaja").unbind();
+      					  $("#darBaja").click(function(){
+							var query = new Parse.Query(Parse.User);
+      					  	query.get(e.currentTarget.id, {
+								success: function(userObject) {
+									userObject.save({
+										 success: function(myObject){
+										 	$("#myModal").hideModal();
+											galf.getUsers();
+										 }
+									});
+								}
+      					  	});
+      					  });
+	 					  $('#myModal').reveal();
+      				});
+   				 });
+  			},
+  			error: function(collection, error) {
+  				console.log(error);
+  			}
+  		});
+	},
+	getCampos: function() {
+		var Campos= Parse.Object.extend("campos");
+		$("#camposDivTable").empty();
+		$("#camposDivTable").append('<table id="camposTable" class="table table-striped"><thead><tr><th>Nombre</th><th>E-mail</th><th>Web</th><th>Telefono</th><th>Dirección</th></tr></thead></table>');
+		var CamposTable = $('#camposTable').dataTable({ "aoColumnDefs": [ { "bSortable": false, "aTargets": [ 0 ] } ], iDisplayLength:100 });
+		CamposTable.fnClearTable();
+		galf.connectToParse();
+		var CamposCollection = Parse.Collection.extend({
+  			model: Campos
+		});
+		var Usrcollection = new CamposCollection();
+		Usrcollection.fetch({
+ 		 	success: function(collection) {
+  		 		 collection.each(function(object) {
+  		 		 	console.debug(object);
+  		 		 	var nombre= object.get('nombre');
+  		 		 	var id= object.id;
+  		 		 	var web = object.get('web');
+  		 		 	var positionLat,positionLong;
+  		 		 	var direccion = object.get('direccion');
+  		 		 	var email = object.get('email');
+  		 		 	var telefono = object.get('telefono');
+  		 		 	if (object.get('posicion')){
+	  		 		 	positionLat = object.get('posicion')["_latitude"];
+	  		 		 	positionLong = object.get('posicion')["_longitude"];
+	  		 		 }
+	  		 		 else {
+	  		 		 	positionLat = "-";
+	  		 		 	positionLong = "-";
+	  		 		 }
+	  		 		if (object.get('logo')) {
+  		 		 		var logo = object.get('logo').url();
+  		 		 	}
+  		 		 	else {
+  		 		 		var logo ="images/placeholder.png";
+  		 		 	}
+  		 		 	if (!web) {
+  		 		 		web="-";
+  		 		 	}
+  		 		 	if (!telefono) {
+  		 		 		telefono="-";
+  		 		 	}
+  		 		 	if (!direccion){
+  		 		 		direccion="-";
+  		 		 	}
+  		 		 	if (!email) {
+  		 		 		email="-";
+  		 		 	}
+  		 		 	if (!nombre) {
+  		 		 		nombre="-";
+  		 		 	}
+
+      				var a = CamposTable.fnAddData(['<a href="#" id="'+id+'">'+nombre+'</a>',email,web,telefono,direccion]);  
+      				$("#"+id).unbind();
+      				$("#"+id).click(function(e){
+      					   e.preventDefault();
+      					  $("#contentPicker").removeClass("mostraInline");
+      					  $("#contentPicker").addClass("amaga");
+      					  $("#logoCampoImg").attr('src',logo);
+      					  $("#profile-username").text(nombre);
+      					  $("#profile-ubication").html("<a href='#'>"+direccion+", ["+positionLat+","+positionLong+"]</a>");
+      					  $("#profile-mail").text(email);
+      					  $("#campoFieldMod").val(nombre);
+      					  $("#emailFieldMod").val(email);
+      					  $("#webFieldMod").val(web);
+      					  $("#telphFieldMod").val(telefono);
+      					  $("#direccionFieldMod").val(direccion);
+      					  $("#posicionFieldMod").val(positionLat+","+positionLong);
+      					   var mapOptions = {
+         					 center: new google.maps.LatLng(positionLat, positionLong),
+         					 zoom: 11,
+          					 mapTypeId: google.maps.MapTypeId.ROADMAP,
+          				 	    zoomControl: true,
+							    zoomControlOptions: {
+							        style: google.maps.ZoomControlStyle.SHORT,
+							        position: google.maps.ControlPosition.LEFT_CENTER
+							    },
+       					   };
+       					   var map = new google.maps.Map(document.getElementById("mapaCampo"),mapOptions);
+       					   var myLatLng = new google.maps.LatLng(positionLat, positionLong);
+       					   galf.marker=null;
+       					   galf.placeMarker(myLatLng, map,null);
+       					   $( "#tabs" ).tabs();
+       					  
+						   $("#addPhotoButton").unbind();
+						   $("#addPhotoButton").click(function() {
+						   		$("#uploadPhoto").addClass("mostra");
+						   		$("#contentPhoto").addClass("amaga");
+						   });
+						   $("#uploadFotos").unbind();
+						     $("#uploadFotos").click(function() {
+						     		var fotoClass= Parse.Object.extend("campoPhotoGallery");
+									var nuevaFoto = new fotoClass();
+									var fileUploadControl = $("#fotoFileCampo")[0];
+									if (fileUploadControl.files.length > 0) {
+										var file = fileUploadControl.files[0];
+										var name = "photo.jpg";
+ 									}
+ 									else {
+ 										return 0;
+ 									}
+ 									var parseFile = new Parse.File(name, file);
+ 									parseFile.save().then(function() {
+ 										nuevaFoto.set("image", parseFile);
+ 										nuevaFoto.set("showInCampoSlideshow",true);
+ 										nuevaFoto.save(null, { 
+											success: function(myFoto) {
+												var relation = object.relation("fotosRel");
+												relation.add(nuevaFoto);
+												object.save({
+													success:function(result) {
+														$("#uploadPhoto").removeClass("mostra");
+						   								$("#contentPhoto").removeClass("amaga");
+														$("#camposBox").hideModal();
+														$("#"+id).trigger("click");
+													}
+												});
+											},
+											error: function(mySalida, error) {
+												console.log(error);
+											}
+										});
+									});
+						     });
+						   $("#removePhotoButton").unbind();
+						   $("#removePhotoButton").click(function() {
+						   	var fotos= Parse.Object.extend("campoPhotoGallery");
+							var query = new Parse.Query(fotos);
+							$.msgbox("Confirma que desea eliminar esta foto ?", {
+								type: "confirm",
+								buttons : [
+									{type: "submit", value: "Si"},
+									{type: "submit", value: "No"}
+								]
+							}, function(result) {
+									if (result=="Si") {
+										query.get(window.currentImage, {
+										  success: function(fotoObject) {
+										  		fotoObject.destroy({
+										 			 success: function(myObject) {
+										   				$("#camposBox").hideModal();
+														$("#"+id).trigger("click");
+										 			 },
+													  error: function(myObject, error) {
+										  				}
+												});
+										  },
+										  error: function(object,error) {
+
+										  }
+										});
+									}
+								});
+						   });
+						   $("#modificarCampo").unbind();
+						   $("#modificarCampo").click(function() {
+						   		galf.updateCampo(e.currentTarget.id);
+						   });
+						   $("#eliminarCampo").unbind();
+						   $("#eliminarCampo").click(function() {
+						   		galf.destroyCampo(e.currentTarget.id);
+						   });
+       					   galf.gettingCampoInfo(e.currentTarget.id);
+      				});
+   				 });
+  			},
+  			error: function(collection, error) {
+  				console.log(error);
+  			}
+  		});
+	},
+	gettingCampoInfo: function(e){
+		var CamposforQuery= Parse.Object.extend("campos");
+		var campsQuery= new Parse.Query(CamposforQuery);
+		window.campoSeleccionado = e;
+		$("#parFieldShow").text("");
+		$("#ventajaFieldShow").text("");
+		$("#yardasFieldShow").text("");
+		$("#patronFieldShow").text("");
+		$("#curvaFieldShow").text("");
+		    $("#photoPlayer").remove();
+			campsQuery.get(window.campoSeleccionado,{
+						success: function(object) {
+		 			 		var relation = object.relation("salidas");
+
+		 			 		var relationQuery = relation.query();
+
+		 			 		relationQuery.ascending("createdAt");
+
+							relationQuery.find({
+								success: function(list) { //Recuperamos las salidas asignadas al campo
+
+									galf.currentSalidas = list;
+									//Seleccionamos por defecto la primera salida
+								
+								//Generamos el formulario de los hoyos					 
+								galf.colorForm = '<select id="salidasDropList"></select><div id="colourExtraSelector"><input placeholder="nueva" id="coloursplusField" name="coloursplusField" class="minicolors minicolors-theme-bootstrap minicolors-position-bottom minicolors-position-left minicolors-focus"/></div> <button id="moreSalidas">Añadir salida</button><button id="clearSalidas">Eliminar Salida</button></div><br/><br/><input type="text" id="patronSalida" placeholder="Patron"><input type="text" id="curvaSalida" placeholder="Curva"></div><br/><div id="salidaVars"><label for="hoyoList">Num. Hoyo</label><select id="hoyolist" name="hoyolist"></select><input type="text" id="parFieldNew" placeholder="Par" /><input type="text" id="hcpFieldNew" placeholder="HCP" /><div id="whiteOuts" class="mostra"><input type="text" id="patronField" name="patronField" placeholder="Patrón"><input type="text" id="curvaField" name="curvaField" placeholder="Curva"></div><div id="blueOuts" class="amaga"><input type="text" id="patronBlueField" name="patronBlueField" placeholder="Patrón"><input type="text" id="curvaBlueField" name="curvaBlueField" placeholder="Curva"></div><div id="redOuts" class="amaga"><input type="text" id="patronRedField" name="patronRedField" placeholder="Patrón"><input type="text" id="curvaRedField" name="curvaRedField" placeholder="Curva"></div><div id="extraOuts" class="amaga"><input type="text" id="patronExtraField" name="patronExtraField" placeholder="Patrón"><input type="text" id="curvaExtraField" name="curvaExtraField" placeholder="Curva"></div><div id="extraOuts1" class="amaga"><input type="text" id="patronExtraField1" name="patronExtraField1" placeholder="Patrón"><input type="text" id="curvaExtraField1" name="curvaExtraField1" placeholder="Curva"></div><div id="distanciaDivNew"><input type="text" id="distanciaField" name="distanciaField" placeholder="Distancia"></div></div>';
+			       				$("#colorFormUpdate").empty();
+			       				$("#colorFormUpdate").append(galf.colorForm);
+			       				$("#moreSalidas").unbind();
+								$("#moreSalidas").click(function() {
+								   	if ($("#coloursplusField").val().length>1){
+										var salidasParse = Parse.Object.extend("salidaHoyo");
+										var salidaNueva = new salidasParse();
+										salidaNueva.set('campo',object);
+										salidaNueva.set('hexColor',$("#coloursplusField").val().split("#")[1].trim());
+										salidaNueva.save({
+											success: function(result) {
+												var relation = object.relation("salidas");
+												relation.add(result);
+												object.save();
+												var nuevosHoyosSalida = new Array();
+												for (var i=1; i<=object.get("numHoyos");i++) {
+													var hoyoExt = Parse.Object.extend("hoyos");
+													var hoyo = new hoyoExt();
+													hoyo.set("numHoyo", i);
+
+													var hoyosIguales = galf.getHoyosConNumero(i);
+													if(typeof hoyosIguales != 'undefined' && hoyosIguales.length > 0) {
+														hoyo.set("par", hoyosIguales[0].get("par"));
+														hoyo.set("ventaja", hoyosIguales[0].get("ventaja"));
+													}
+													hoyo.set("salida", result);
+
+													nuevosHoyosSalida.push(hoyo);
+												}
+
+												Parse.Object.saveAll(nuevosHoyosSalida, {
+													success: function(myHoyos) {
+														console.log("Saved hoyos");
+													},
+													error: function(error) {
+														alert("Error guardando hoyos");
+													}
+												});
+												galf.gettingCampoInfo(object.id);
+											},
+											error: function(mysalida,error) {
+												console.log(error);
+											}
+										});
+													
+									}
+								
+							});
+						   $("#clearSalidas").unbind();
+						   $("#clearSalidas").click(function() {
+						   		if (confirm('Se van a eliminar los hoyos y datos relativos a la salida eliminada')){
+							   		$("#colourExtraSelector").empty();
+							   	 	galf.clearValues();
+							   	 	var salidasToDelete = new Array();
+							   	 	  for(i = 0; i<galf.currentSalidas.length; i++) {
+							   	 	  	if ($("#salidasDropList option:selected").val() == i) {
+							   	 	  		salidasToDelete.push(galf.currentSalidas[i]);
+							   	 	  	}
+							   	 	  }
+							   	 	  $.each(salidasToDelete, function(index, value) {
+							   	 	  	var hoyosToDelete = galf.hoyosActuales[value.id];
+
+							   	 	  	Parse.Object.destroyAll(hoyosToDelete, function(success, error) {
+							   	 	  		if(success)
+							   	 	  			console.log("Hoyos borrados");
+							   	 	  		else
+							   	 	  			console.log("Error borrando hoyos de la salida");
+							   	 	  	});
+
+							   	 	  
+							   	 	  }); //fin de each salidas
+
+							   	 	  Parse.Object.destroyAll(salidasToDelete, {
+							   	 	  	success: function() {
+							   	 	  			console.log("Borrades les sortides");
+							   	 	  		}, 
+							   	 	  		error: function() {
+							   	 	  			console.log("Error eliminant les sortides");
+							   	 	  		}
+							   	 	  });
+										
+									galf.gettingCampoInfo(object.id);		
+		
+								}
+								
+							});
+							$("#parFieldNew").change(function() {
+
+								var hoyos = galf.getHoyosConNumero($("#hoyolist").val());
+
+								$.each(hoyos, function(index, currentHoyo) {
+									if(typeof currentHoyo != 'undefined') {
+									currentHoyo.set('par', parseInt($("#parFieldNew").val()));
+									currentHoyo.save(null, {
+											success: function(hoyo) {
+											
+											},
+											error: function(hoyo, error) {
+											alert('Failed to create new object, with error code: ' + error.description);
+											}
+									});
+								}
+								});
+
+							});
+
+							$("#hcpFieldNew").change(function() {
+								var hoyos = galf.getHoyosConNumero($("#hoyolist").val());
+
+								$.each(hoyos, function(index, currentHoyo) {
+									if(typeof currentHoyo != 'undefined') {
+									currentHoyo.set('ventaja', parseInt($("#hcpFieldNew").val()));
+									currentHoyo.save(null, {
+											success: function(hoyo) {
+											
+											},
+											error: function(hoyo, error) {
+											alert('Failed to create new object, with error code: ' + error.description);
+											}
+									});
+								}
+								});
+							});
+
+							$("#distanciaField").change(function() {
+								var currentHoyo = galf.getHoyoSeleccionado();
+									if(typeof currentHoyo != 'undefined') {
+									currentHoyo.set('distancia', parseInt($("#distanciaField").val()));
+									currentHoyo.save(null, {
+											success: function(hoyo) {
+											
+											},
+											error: function(hoyo, error) {
+											alert('Failed to create new object, with error code: ' + error.description);
+											}
+									});
+								}
+								
+							});
+
+							$("#patronSalida").change(function() {
+								galf.salidaSeleccionada.set('patron', parseInt($("#patronSalida").val()));
+								galf.salidaSeleccionada.save(null, {
+									success: function(salida) {
+
+									}, 
+										error: function(salida, error) {
+										alert('Failed to save patron: ' + error.description);
+										}
+								});
+							});
+
+							$("#curvaSalida").change(function() {
+								galf.salidaSeleccionada.set('slope', parseInt($("#curvaSalida").val()));
+								galf.salidaSeleccionada.save(null, {
+									success: function(salida) {
+
+									}, 
+										error: function(salida, error) {
+										alert('Failed to save patron: ' + error.description);
+										}
+								});
+							});
+
+
+
+			       			galf.makeColourPaletes(galf.currentSalidas);
+
+
+			       			$("#colourSelector").empty();
+							$("#colourSelector").append('<input type="text" id="coloursField" name="coloursField" />');
+
+							$('#coloursField').unbind();
+							$('#coloursField').colorPicker();
+			       			//galf.attachColorEvents(e);
+
+			       			//Creamos un hash para relacionar las salidas con los hoyos hoyosActuales[salida.id]
+			       			galf.hoyosActuales = new Array();
+			       					  		 	 
+
+
+									$.each(list,function(index, value) {
+										
+										$("#salidasDropList").append("<option value='"+index+"' style='background: "+value.get('hexColor')+";'>Salida "+(index+1)+"</option>");
+
+
+
+										galf.optionsHoyos;
+										var hoyosforQuery = Parse.Object.extend("hoyos");
+			 						  	var hoyosQuery= new Parse.Query(hoyosforQuery);
+			 						  	hoyosQuery.ascending("numHoyo");
+			 						 	hoyosQuery.equalTo("salida",value);
+
+
+
+			 						  	hoyosQuery.find({
+			 						  		success:function(results) {	
+
+			 						  			var idSalida = value.id;
+
+			 						  			galf.hoyosActuales[idSalida]=results;
+
+			 						  			galf.seleccionaSalida(list[0]);
+
+			 						  		}
+			 						  		
+			 						 	});
+
+
+									});
+
+									$("#salidasDropList").change(function() {
+										var newSalida = galf.currentSalidas[$("#salidasDropList").val()];
+											galf.seleccionaSalida(newSalida);
+										});
+		  						
+							
+
+							},
+
+						});
+				}
+			});
+		    galf.getCampPhotos(e);
+		   $('#camposModal').reveal();
+	},
+	getHoyosConNumero: function(numero) {
+
+		var hoyos = new Array();
+
+		$.each(galf.currentSalidas, function(index, value) {
+			var hoyosSalida = galf.hoyosActuales[value.id];
+
+			$.each(hoyosSalida, function(indexHoyo, hoyo) {
+				if(hoyo.get('numHoyo') == numero) 
+					hoyos.push(hoyo);
+			});
+
+		});
+
+		return hoyos;
+
+	},
+	getHoyoSeleccionado: function() {
+		var salida = galf.salidaSeleccionada;
+
+		var numHoyoSelected = $("#hoyolist").val();
+
+
+		$.each(galf.hoyosActuales[salida.id], function(index, value) {
+			if(value.get("numHoyo") == numHoyoSelected) {
+				currentHoyo = value;
+			}
+		});
+
+		return currentHoyo;
+	},
+	getCampPhotos: function(campID) {
+		   var CamposforQuery= Parse.Object.extend("campos");
+		   var thereArePhotos = 0;
+		   var campsQuery= new Parse.Query(CamposforQuery);
+			campsQuery.get(campID,{
+						success: function(object) {
+		 			 	var relation = object.relation("fotosRel");
+		 			 	$('#contentPhoto').append(" <div id='photoPlayer' class='photoPlayer'><span id='noPhotosText'></span><ul id='photoList' class='bjqs'></ul></div>");
+		 			 	$('#noPhotosText').html("<br/>No hay fotos en este campo");
+						relation.query().find({
+							success: function(list) {
+								$.each(list,function(value, index) {
+									thereArePhotos=1;
+									$('#noPhotosText').text("");
+  									$('#photoList').append("<li id='"+list[value].id+"'><img src='"+list[value].get('image').url()+"' alt='photo' /></li>");
+								});
+								if (thereArePhotos==1) {
+									$('.photoPlayer').bjqs({
+							            height      : 320,
+							            width       : 475,
+							            responsive  : false
+							        });
+							    }
+							}
+						});
+					}
+			});
+	},
+	placeMarker: function(position, map,evt) {
+			if (galf.marker) {
+				galf.marker.setPosition(position);
+			}
+			else {
+				if (evt!=null) {
+	        		galf.marker = new google.maps.Marker({
+	     	   			position: position,
+	          			map: map,
+	          			draggable:true
+	       			 });
+	        	}
+	        	else {
+	        		galf.marker = new google.maps.Marker({
+	     	   			position: position,
+	          			map: map,
+	          			draggable:false
+	       			 });
+	        	}	
+	        }
+	        map.panTo(position);
+	        if (evt!=null) {
+	       	 	galf.getLocationVars(evt);
+	       	 	google.maps.event.addListener(galf.marker, 'dragend', function(evt){
+    				galf.getLocationVars(evt);
+				});
+	       	}
+	       	 galf.marker.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png');		        
+	},
+	getLocationVars:function(evt) {
+		galf.latitude= evt.latLng.lat().toFixed(6);
+   		galf.longitude = evt.latLng.lng().toFixed(6);
+		$("#posicionField").val(galf.latitude+","+galf.longitude);
+	},
+	previewUploaded: function(input) {
+		if (input.files && input.files[0]) {
+	        var reader = new FileReader();
+	        reader.onload = function (e) {
+	            $('#prevImg').attr('src', e.target.result);
+	        }
+	        reader.readAsDataURL(input.files[0]);
+		}
+	},
+	sendCampoToParse: function() {
+		var fileUploadControl = $("#logoField")[0];
+		var camposTable = Parse.Object.extend("campos");
+		var nuevoCampo = new camposTable();
+		var latitudeCampo = parseFloat($("#posicionField").val().split(",")[0]);
+  		var longitudeCampo = parseFloat($("#posicionField").val().split(",")[1]);
+  		var point = new Parse.GeoPoint({latitude: latitudeCampo, longitude: longitudeCampo});
+		nuevoCampo.set("nombre", $("#campoNameField").val());
+		nuevoCampo.set("numHoyos", parseInt($("#hoyosQuantity").val()));
+		nuevoCampo.set("nombreCanonical", $("#campoNameField").val().toUpperCase());
+		nuevoCampo.set("direccion", $("#direccionField").val());
+		nuevoCampo.set("web", $("#siteField").val());
+		nuevoCampo.set("telefono", $("#telefonoField").val());
+		nuevoCampo.set("email", $("#emailField").val());
+		nuevoCampo.set("posicion", point);
+		if (fileUploadControl.files.length > 0) {
+ 			var file = fileUploadControl.files[0];
+  			var name = "photo.jpg";
+ 			var parseFile = new Parse.File(name, file);
+			nuevoCampo.set("logo", parseFile);
+	 			parseFile.save().then(function() {
+	  				console.log("Image has been uploaded");
+					nuevoCampo.save(null,{
+						success: function(campoObject) {
+								var salidasArray = new Array();
+								var salidasParse = Parse.Object.extend("salidaHoyo");
+									if ($("#whiteCheck").prop("checked")) {
+										var salidaBlanca = new salidasParse();
+										salidaBlanca.set("hexColor", "ffffff");
+										salidaBlanca.set("campo", campoObject);
+										salidasArray.push(salidaBlanca);
+									}
+									if ($("#blueCheck").prop("checked")) {
+										var salidaAzul = new salidasParse();
+										salidaAzul.set("hexColor", "48a0e5");
+										salidaAzul.set("campo", campoObject);
+										salidasArray.push(salidaAzul);
+									}
+									if ($("#redCheck").prop("checked")) {
+										var salidaRoja = new salidasParse();
+										salidaRoja.set("hexColor", "e54848");
+										salidaRoja.set("campo", campoObject);
+										salidasArray.push(salidaRoja);
+									}
+									
+							
+								Parse.Object.saveAll(salidasArray, {
+									success: function(mySalida) {
+										console.log("salidas saved");
+											if (typeof salidaBlanca != 'undefined') {
+												var relationWhite = campoObject.relation("salidas");
+												relationWhite.add(salidaBlanca);
+												galf.savingHoyos(campoObject,salidaBlanca);
+
+											}
+											if (typeof salidaAzul != 'undefined') {
+												var relationBlue = campoObject.relation("salidas");
+												relationBlue.add(salidaAzul);
+												galf.savingHoyos(campoObject,salidaAzul);
+											}
+											if (typeof salidaRoja != 'undefined') {
+												var relationRed = campoObject.relation("salidas");
+												relationRed.add(salidaRoja);
+												galf.savingHoyos(campoObject,salidaRoja);
+
+											}
+											
+										
+									},
+									error: function(error) {
+												console.log(error);
+									}
+								});
+							$("#myCampo").hideModal();
+							console.log("save&send");
+							galf.getCampos();
+						},
+						error: function() {
+							$("#myCampo").hideModal();
+							console.log("error saving");
+						}
+					});
+				}, function(error) {
+					console.log(error);
+				});
+				$("#myCampo").hideModal();
+		}
+		else {
+			alert("Debe cargar una imagen para el campo")
+		}
+	},
+	savingHoyos: function(campoObject, salida) {
+		var hoyosExtend= Parse.Object.extend("hoyos");
+			campoObject.save({
+				success:function(result) {
+						var hoyos = new Array();
+						galf.hoyosTotal = $("#hoyosQuantity").val();
+						for (var i=1; i<=galf.hoyosTotal;i++) {
+							window["nuevoHoyo"+i]= new hoyosExtend();
+							window["nuevoHoyo"+i].set("numHoyo", i);
+							window["nuevoHoyo"+i].set("par", parseInt(galf.parArray[i]));
+							window["nuevoHoyo"+i].set("ventaja", parseInt(galf.HCPArray[i]));
+							window["nuevoHoyo"+i].set("salida", salida);
+							window["nuevoHoyo"+i].set("distancia", parseInt(galf.distanciaWhiteArray[i]));
+							hoyos.push(window["nuevoHoyo"+i]);
+						}
+						Parse.Object.saveAll(hoyos, {
+							success: function(myHoyos) {
+								console.log("Hoyos guardados" + myHoyos);
+							},
+							error: function(error) {
+									console.log(error);
+							}
+						});
+				},
+				error: function(error) {
+					console.log(error);
+				}
+			});
+	},
+	updateCampo: function(idCampo) {
+			var campos= Parse.Object.extend("campos");
+			var query = new Parse.Query(campos);
+			query.get(idCampo, {
+				success: function(campoObject) {
+					var point = new Parse.GeoPoint({latitude: parseFloat($("#posicionFieldMod").val().split(",")[0]), longitude: parseFloat($("#posicionFieldMod").val().split(",")[1])});
+					campoObject.set("nombre", $("#campoFieldMod").val());
+					campoObject.set("email", $("#emailFieldMod").val());
+					campoObject.set("web",$("#webFieldMod").val());
+					campoObject.set("telefono", $("#telphFieldMod").val());
+					campoObject.set("direccion",$("#direccionFieldMod").val());
+					campoObject.set("posicion",point);
+					campoObject.save({
+						success:function(result) {
+							$("#camposModal").hideModal();
+							galf.getCampos();
+							$("#"+idCampo).trigger("click");
+						}
+					});
+				}
+			});
+	},
+	destroyCampo: function(idCampo){
+			var campos= Parse.Object.extend("campos");
+			var query = new Parse.Query(campos);
+			$.msgbox("Confirma que desea eliminar este campo :  "+ $("#profile-username").text() + " ?", {
+				type: "confirm",
+				buttons : [
+					{type: "submit", value: "Si"},
+					{type: "submit", value: "No"}
+				]
+			}, function(result) {
+					if (result=="Si") {
+									 var salidasToDelete = new Array();
+							   	 	  for(i = 0; i<galf.currentSalidas.length; i++) {
+							   	 	  		salidasToDelete.push(galf.currentSalidas[i]);
+							   	 	  }
+							   	 	  $.each(salidasToDelete, function(index, value) {
+							   	 	  	var hoyosToDelete = galf.hoyosActuales[value.id];
+							   	 	  	Parse.Object.destroyAll(hoyosToDelete, function(success, error) {
+							   	 	  		if(success)
+							   	 	  			console.log("Hoyos borrados");
+							   	 	  		else
+							   	 	  			console.log("Error borrando hoyos de la salida");
+							   	 	  	});
+
+							   	 	  
+							   	 	  }); //fin de each salidas
+
+							   	 	  Parse.Object.destroyAll(salidasToDelete, {
+							   	 	  	success: function() {
+							   	 	  			console.log("Borrades les sortides");
+							   	 	  		}, 
+							   	 	  		error: function() {
+							   	 	  			console.log("Error eliminant les sortides");
+							   	 	  		}
+							   	 	  });
+										
+									query.get(idCampo, {
+										success: function(campoObject) {
+											campoObject.destroy({
+												 success: function(myObject) {
+											 		$("#camposModal").hideModal();
+											 		galf.getCampos();
+												 },
+												 error: function (myObject,error) {
+												 	console.log(error);
+												 }
+											});
+										}
+									});
+								}
+			});
+	},
+	makeColourPaletes: function(salidas){
+		  galf.colorsPick = new Array();
+
+		  $.each(salidas, function(index, value) {
+		  	galf.colorsPick.push(value.get('hexColor'));
+		  });
+
+		  $("#colourSelector").empty();
+		  $("#colourExtraSelector").empty();
+		  $("#colourSelector").append('<input type="text" id="coloursField" name="coloursField" />');
+		  $("#colourExtraSelector").append('<input type="text" id="coloursplusField" name="coloursplusField" />');
+		  $.fn.colorPicker.defaults.colors = galf.colorsPick;
+		  $('#coloursField').unbind();
+		  $('#coloursField').colorPicker();
+
+		  $("#selectedColor").attrchange({
+				trackValues: true,
+				callback: function (event) { 
+					colorActual = event.newValue.split(":")[1].trim();
+				   	colorAnterior= event.oldValue.split(":")[1].trim();
+				   	galf.interChangeInputs($("#selectedColor").css('background-color'), colorAnterior);
+				}
+		   });
+
+		  $('#coloursplusField').minicolors();
+	},
+	attachColorEvents:function(e) {
+			var campos = Parse.Object.extend("campos");
+			var query = new Parse.Query(campos);
+			query.get(e.target.id, {
+				success: function(campoObject) {
+					var salidasRelation = campoObject.relation("salidas");
+					salidasRelation.query().find({
+						success: function(list) {
+							$.each(list,function(value,index) {
+								if (list[value].get('hexColor') == "ffffff") {
+									$("#patronWhiteField").val(list[value].get("patron"));
+									$("#curvaWhiteField").val(list[value].get("slope"));
+								}
+								if (list[value].get('hexColor') == "48a0e5") {
+									$("#patronBlueField").val(list[value].get("patron"));
+									$("#curvaBlueField").val(list[value].get("slope"));							
+								}
+								if (list[value].get('hexColor') == "e54848") {
+									$("#patronRedField").val(list[value].get("patron"));
+									$("#curvaRedField").val(list[value].get("slope"));						
+								}
+								if (typeof galf.extraColorHex !='undefined'){
+									if (list[value].get('hexColor') == galf.extraColorHex.split("#")[1]) {
+										$("#patronExtraField").val(list[value].get("patron"));
+										$("#curvaExtraField").val(list[value].get("slope"));					
+									}
+								}
+								if (typeof galf.extraColorHex1 !='undefined'){
+									if (list[value].get('hexColor') == galf.extraColorHex1.split("#")[1]) {
+										$("#patronExtraField1").val(list[value].get("patron"));
+										$("#curvaExtraField1").val(list[value].get("slope"));				
+									}
+								}
+							});
+						},
+						error: function(error) {
+							console.log(error);
+						}
+					});
+				}
+			});
+
+
+		$("#modificarParamsCampo").unbind();
+		$("#modificarParamsCampo").click(function() {
+			var campos = Parse.Object.extend("campos");
+			var query = new Parse.Query(campos);
+			query.get(e.target.id, {
+				success: function(campoObject) {
+					var salidasRelation = campoObject.relation("salidas");
+					salidasRelation.query().find({
+						success: function(list) {
+							$.each(list,function(value,index) {
+								if (list[value].get('hexColor') == "ffffff") {
+									list[value].set("patron",parseInt($("#patronWhiteField").val()));
+									list[value].set("slope",parseInt($("#curvaWhiteField").val()));
+								}
+								if (list[value].get('hexColor') == "48a0e5") {
+									list[value].set("patron",parseInt($("#patronBlueField").val()));
+									list[value].set("slope",parseInt($("#curvaBlueField").val()));							
+								}
+								if (list[value].get('hexColor') == "e54848") {
+									list[value].set("patron",parseInt($("#patronRedField").val()));
+									list[value].set("slope",parseInt($("#curvaRedField").val()));							
+								}
+								if (list[value].get('hexColor') == galf.extraColorHex.split("#")[1]) {
+									list[value].set("patron",parseInt($("#patronExtraField").val()));
+									list[value].set("slope",parseInt($("#curvaExtraField").val()));						
+								}
+								if (list[value].get('hexColor') == galf.extraColorHex1.split("#")[1]) {
+									list[value].set("patron",parseInt($("#patronExtraField1").val()));
+									list[value].set("slope",parseInt($("#curvaExtraField1").val()));						
+								}
+								list[value].save({
+									success:function(result) {
+										console.log("Salidas actualizadas");
+									},
+									error: function(error){
+										console.log(error);
+									}
+								});
+								
+							});
+						},
+						error: function(error) {
+							console.log(error);
+						}
+					});
+
+					campoObject.save({
+						success:function(result) {
+							alert("Los parámetros del campo han sido actualizados");
+						},
+						error:function(error) {
+							console.log(error);
+						}
+					});
+				},
+				error: function(error) {
+					console.log(error);
+				}
+			});
+		});
+		
+
+
+
+				$("#hoyolist").trigger("change");
+			
+		galf.firstCol=1;
+	},
+	campAttaching:function() {
+		galf.totalSalidas=3;
+	   	var colorAnterior;
+	   	galf.distanciaWhiteArray = new Array();
+	   	galf.distanciaBlueArray = new Array();
+	   	galf.distanciaRedArray = new Array();
+	   	galf.distanciaExtraArray = new Array();
+	   	galf.distanciaExtraArray1 = new Array();
+	   	galf.parArray = new Array();
+	    galf.HCPArray = new Array();
+	   	galf.extraColor="";
+	   	galf.extraColor1="";
+	   	$("#addCampo").unbind();
+		$("#addCampo").click(function() {
+			google.maps.visualRefresh = true;
+			navigator.geolocation.getCurrentPosition(function(pos) {
+				galf.latitude= pos.coords.latitude;
+				galf.longitude= pos.coords.longitude;
+				 var mapOptions = {
+         				 center: new google.maps.LatLng(galf.latitude, galf.longitude),
+         				 zoom: 8,
+          				 mapTypeId: google.maps.MapTypeId.ROADMAP,
+          				  zoomControlOptions: {
+        					  style: google.maps.ZoomControlStyle.LARGE,
+      						  position: google.maps.ControlPosition.RIGHT_CENTER
+    						}
+       		   };
+       		   var map = new google.maps.Map(document.getElementById("googleMap"),mapOptions);
+       		   $("#cerrarMapa").unbind();
+       		   $("#cerrarMapa").click(function(){
+       		   		$('#googleMap').removeClass("mostra").addClass("amaga");
+       		   		$('#cerrarMapa').removeClass("mostra").addClass("amaga");
+       		   	});
+       		   $('#posicionField').unbind();
+       		   $('#posicionField').click(function(){
+       		   		$('#googleMap').removeClass("amaga").addClass("mostra");
+       		   		$('#cerrarMapa').removeClass("amaga").addClass("mostra");
+					 google.maps.event.addListener(map, 'click', function(e) {
+					          galf.placeMarker(e.latLng, map,e);
+					  });
+					google.maps.event.trigger(map, "resize");
+       		   });
+       		   		$("#logoField").unbind();
+       		   		$("#logoField").change(function(){
+		   				 galf.previewUploaded(this);
+					});
+			   galf.marker=null;
+			   $("#addCampoNuevo").unbind();
+			   $("#addCampoNuevo").click(galf.sendCampoToParse);
+			   $('#prevImg').attr('src', 'images/placeholder.png');	
+			   $("#logoField").val("");
+			   $("#telefonoField").val("");
+			   $("#posicionField").val("");
+			   $("#cerrarMapa").trigger("click");
+			   $('#myCampo').reveal();
+			});
+		});
+	},
+	componentToHex: function(c) {
+    	var hex = c.toString(16);
+    	return hex.length == 1 ? "0" + hex : hex;
+	},
+	rgbToHex: function(r, g, b) {
+    	return "#" + galf.componentToHex(r) + galf.componentToHex(g) + galf.componentToHex(b);
+	},
+	hexToRgb: function(hex) {
+	    // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
+	    var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+	    hex = hex.replace(shorthandRegex, function(m, r, g, b) {
+	        return r + r + g + g + b + b;
+	    });
+
+	    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+	    return result ? {
+	        r: parseInt(result[1], 16),
+	        g: parseInt(result[2], 16),
+	        b: parseInt(result[3], 16)
+	    } : null;
+},
+	clearValues: function() {
+		$("#campoNameField").val("");
+		$("#direccionField").val("");
+		$("#posicionField").val("");
+		$("#emailField").val("");
+		$("#siteField").val("");
+		$("#whiteCheck").prop('checked',false);
+		$("#redCheck").prop('checked',false);
+		$("#blueCheck").prop('checked',false);
+		$("#patronWhiteField").val("");
+		$("#curvaWhiteField").val("");
+		$("#patronBlueField").val("");
+		$("#curvaBlueField").val("");
+		$("#patronRedField").val("");
+		$("#curvaRedField").val("");
+		$("#patronExtraField").val("");
+		$("#curvaExtraField").val("");
+		$("#patronExtraField1").val("");
+		$("#curvaExtraField1").val("");
+	},
+
+	parseColor:function(rgb) {
+    	
+	rgb = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+ return ""+
+  ("0" + parseInt(rgb[1],10).toString(16)).slice(-2) +
+  ("0" + parseInt(rgb[2],10).toString(16)).slice(-2) +
+  ("0" + parseInt(rgb[3],10).toString(16)).slice(-2);
+
+	},
+	seleccionaSalida: function(salida) {
+		galf.salidaSeleccionada = salida;
+
+
+		$("#salidaVars").css('background-color', "#"+salida.get('hexColor'));
+
+		galf.optionsHoyos = '';
+		$("#hoyolist").empty();
+
+
+		var hoyosSalida = galf.hoyosActuales[salida.id];
+
+	    $.each(hoyosSalida, function(index, value) {
+	     	var numHoyo = value.get('numHoyo');
+	       	galf.optionsHoyos+="<option value='"+numHoyo+"'>"+numHoyo+"</option>";
+	    });
+	    $("#hoyolist").append(galf.optionsHoyos);
+	    $("#hoyolist").trigger('change');
+	    $("#hoyolist").unbind();
+		$("#hoyolist").change(function() {
+			var currentHoyo = galf.getHoyoSeleccionado();
+			if(typeof currentHoyo != 'undefined') {
+				$("#parFieldNew").val(currentHoyo.get('par'));	
+				$("#hcpFieldNew").val(currentHoyo.get('ventaja'));
+				$("#distanciaField").val(currentHoyo.get('distancia'));
+			}
+		});
+		$("#patronSalida").val(salida.get('patron'));
+		$("#curvaSalida").val(salida.get('slope'));
+	},
+	interChangeInputs: function(colorActual, colorAnterior) {
+			var color = galf.parseColor(colorActual);
+			var salidaIndex = galf.colorsPick.indexOf(color);
+			var nuevaSalida = galf.currentSalidas[salidaIndex];
+			galf.seleccionaSalida(nuevaSalida);
+	},
+	init:function() {
+		if (galf.getUrlVars()["section"]=="users") {
+			galf.getUsers();
+		}
+		if (galf.getUrlVars()["section"]=="campos") {
+			galf.getCampos();
+			galf.campAttaching();
+		}
+	}
+	
+};
+
+
+
+(function(win, doc, ns, undefined) {
+    win.onload = function(){
+        ns.init();
+    };
+}(window, document, galf));

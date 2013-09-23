@@ -7,6 +7,8 @@ googleMaps = {
           mapTypeId: google.maps.MapTypeId.ROADMAP
         };
         googleMaps.map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
+        googleMaps.markerArray = [];
+        googleMaps.clusterStyes=[];
         googleMaps.poiTable();
         googleMaps.toggleViewer();
 	},
@@ -71,95 +73,103 @@ googleMaps = {
 				  googleMaps.map_recenter(map,myLatlng,0,100);
 		    });
 	},
-		clusteringMarkers: function(markers){
-			var markerClusterer = new MarkerClusterer(googleMaps.map, markers, {styles: googleMaps.clusterStyles, maxZoom:13});
+	clusteringMarkers: function(map,markers){
+			var markerClusterer = new MarkerClusterer(map, markers, {styles: googleMaps.clusterStyles, maxZoom:13});
 				markerClusterer.setGridSize(15);
 				$('.map_container').gmap('set', 'MarkerClusterer', markerClusterer);
-				console.log(googleMaps.clusterStyles);	  	
+				 	
 		},
+	createMarker: function(map,name,lat,lng,html) {
+		   var myLatlng = new google.maps.LatLng(lat,lng);
+			var contentString =html;
+			var infowindow = new google.maps.InfoWindow({
+		        content: ""
+		    });
+		    var marker = new google.maps.Marker({
+		        position: myLatlng,
+		        map: map,
+		        bounds: true,
+		        icon:'http://images.farrepuche.com/green_marker.png',
+		        title: name
+		    });
+		    googleMaps.markerArray.push(marker);
+		    $("#llistaPOI").append('<li><div class="POIElement" id="'+name+'"><span>'+name+'</span></div></li>');	
+		    google.maps.event.addListener(marker, 'click', function() {
+		      infowindow.open(map,marker);
+		    });
 		
-		getLocationParameters: function(value,lastIteration){
+		    google.maps.event.addDomListener(document.getElementById(name), 'click', function() {
+		      infowindow.open(map,marker);
+		    });
+		     googleMaps.clusterStyles.push({
+			    opt_textColor: 'transparent',
+			    textColor: '#000000',
+			    url: 'http://images.farrepuche.com/green_cluster.png',
+			    height: 35,
+			    width: 35
+			}); 
+		 },
+	loadScript: function() {
+		    var script = document.createElement('script');
+		    script.type = 'text/javascript';
+		    script.src = 'https://maps.googleapis.com/maps/api/js?sensor=false&' +
+		        'callback=initialize';
+		    document.body.appendChild(script);
+		 },
+
+	poiTable: function(){
 		var geocoder = new google.maps.Geocoder();
-		var address=googleMaps.direccio = value["POI_postal"] + "," + value["POI_ciutat"];
+		var map;
+		var latitude;
+		var longitude;
+		var address;
 		googleMaps.pointsArray=[];
 		googleMaps.clusterStyles=[];
 		var map = googleMaps.map;
-		geocoder.geocode( { 'address': address}, function(results, status) {
-		if (status == google.maps.GeocoderStatus.OK) {
-       		 googleMaps.map.setCenter(results[0].geometry.location);
-       		       		 $('.map_container').gmap('addMarker', 
-								{
-									'position': results[0].geometry.location.lat()+','+results[0].geometry.location.lng(), 
-									'bounds': true, 
-									'icon': new google.maps.MarkerImage('http://images.farrepuche.com/green_marker.png',    
-										new google.maps.Size(29,40), 
-										new google.maps.Point(0,0), 
-										new google.maps.Point(0,40)
-									)
-								},
-								function(map, marker){
-								googleMaps.map=map;
-									$(marker).click(function(){
-										var bubble = new InfoBubble({ 
-								          content: "<span>"+value['POI_name']+"</span>", 
-								          map:googleMaps.map,
-								          shadowStyle: 1, 
-								          padding: 0, 
-								          backgroundColor: 'rgb(255,255,255)', 
-								          arrowSize: 10, 
-								          borderWidth: 1,  
-								          borderColor: 'lightgray', 
-								          disableAutoPan: false, 
-								          hideCloseButton: false, 
-								          arrowPosition: 50, 
-								          backgroundClassName: '', 
-								          arrowStyle: 0 
-								        });
-								        bubble.open(map, marker);
-										
-									});		
-								}
-							);	
-						    googleMaps.clusterStyles.push({
-							    opt_textColor: 'transparent',
-							    textColor: '#000000',
-							    url: 'http://images.farrepuche.com/green_cluster.png',
-							    height: 35,
-							    width: 35
-							});
-								if (lastIteration == true){
-								googleMaps.clusteringMarkers($('.map_container').gmap('get', 'markers'));
-							}
+		googleMaps.getWS(
+			"llista_POIs",
+		  function(data){	
+			$.each(data.llistaPOI, function(index,value){
+				address= value["POI_postal"] + "," + value["POI_ciutat"];
+					geocoder.geocode( { 'address': address}, function(results, status) {
+					  var myLatlng = new google.maps.LatLng(42.4,0.1);
+					  var mapOptions = {
+				      zoom: 4,
+				      center: myLatlng,
+				      mapTypeId: google.maps.MapTypeId.ROADMAP
+				    };
+				    map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
+					if (status == google.maps.GeocoderStatus.OK) {	
+						latitude =results[0].geometry.location.lat();
+						longitude = results[0].geometry.location.lng();
 					}
-					 else {
-						 alert("Geocode was not successful for the following reason: " + status);
-        			}
-				});
+					else {
+						alert("Geocode was not successful for the following reason: " + status);
+					 }
+					    //googleMaps.createMarker(map,value["POI_name"],results[0].geometry.location.lat(),results[0].geometry.location.lng(),"<span>"+value["POI_description"]+"</span>");
+					    console.log(latitude + " " + longitude);
+					googleMaps.createMarker(map,value["POI_name"],value["POI_name"],latitude,longitude,"<span>hola</span>");
+				    	if (index == data.llistaPOI.length -1) {
+							googleMaps.clusteringMarkers(map,$('.map_container').gmap('get', 'markers'));
+							googleMaps.poiWindow();
+										
+							}
 					
-
+			
+					 
+				 });
+			});
+		});
+		
+		
 	},
-
-	poiTable: function() {
+	poiWindow: function(){
 		var POITableList;
 		var ampleFinestra=200;
 		var margesFinestra=10;
 		var marginTopFinestra=120;
 		var windowsize = $(window).width();
-		googleMaps.getWS(
-			"llista_POIs",
-			function(data){	
-				$.each(data.llistaPOI, function(index,value){
-				if (index == data.llistaPOI.length -1) {
-					googleMaps.getLocationParameters(value,true);
-				}
-				else{
-					googleMaps.getLocationParameters(value,false);
-				}
-				$("#llistaPOI").append('<li><div onclick="googleMaps.getLocationParameters(\''+value+'\')" class="POIElement" id="POI'+value["id"]+'"><span>'+value["POI_name"]+'</span></div></li>');
-					
-				});
-				
-				POITableList= $.window({
+		POITableList= $.window({
 					   icon: "http://www.fstoke.me/favicon.ico",
 					   width: ampleFinestra,
 					   height: 500,
@@ -177,13 +187,7 @@ googleMaps = {
 					  POITableList.move(windowsize-(ampleFinestra+margesFinestra), marginTopFinestra);
 				});
 
-			},
-			function(error){
-				console.log(error);
-		 	}
-		 );
-		
-   	}
+	}
    	
 };
 
