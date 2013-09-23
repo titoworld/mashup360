@@ -1,0 +1,93 @@
+@import url(http://fonts.googleapis.com/css?family=Roboto);
+html, #content { 
+	height: 100%; 
+	overflow: hidden;
+	}
+	
+header {
+	background:#333;
+	height:85px;
+	width:100%;
+	box-sizing: border-box;
+	position:relative;
+	z-index: 10;
+	padding-top:65px;
+  }
+  
+h1 {
+	font-family: 'Roboto', sans-serif;
+	white-space:nowrap;
+	color: #ddd;
+}
+  
+body {
+	font-family: 'Roboto', sans-serif;
+	height: 100%;
+	margin: 0; 
+	padding: 0; 
+	}
+  
+thead {
+	margin-bottom:10px;
+}
+iframe {
+	width:100%;
+	height:100%;
+}
+#topNavMenu{
+	margin-left:180px;
+}
+#topNavMenu>li{
+	font-size: 0.6em;
+	float:left;
+	color:white;
+}
+#topNavMenu>li:hover{
+	color:#008b00;
+	cursor:pointer;
+}
+#map_canvas, div#section  {
+	height: 100%;
+   }
+   
+div#section{
+	float:left;
+	width:100%; 
+  }
+  
+#viewer360{
+	width:100%;
+	display:none;
+	height:300px;
+}
+#POIsTable, #POIsTable_info{
+	width:100%;	
+}  
+#POIsTable_length {
+	width:50%;
+}
+img#logo{
+	padding:5px;
+	position:absolute;
+	top:2px;
+	left:5px;
+} 
+
+h1#webTitle {
+	margin-top:-40px;
+	margin-left:50px;
+}
+div#POITable{
+	display:none;
+}
+div.POIElement{
+	width:200px;
+	height:50px;
+	color:white;
+	background-color: #333;
+	border-bottom: 1px solid white;
+}
+div.POIElement:hover{
+	background-color: #555;
+	cursor:pointer;
+}
