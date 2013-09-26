@@ -1,6 +1,4 @@
 <? include("config.php") ?>
-<head>
-	<meta charset="utf-8">
 	<link href='<? echo MAIN_DOMAIN ?>favicon.ico' rel='shortcut icon' type='image/x-icon'/>
 	<link href='<? echo MAIN_DOMAIN ?>favicon.ico' rel='icon' type='image/x-icon'/>  	
 	<link href='<? echo STYLE_DOMAIN ?>reset.css' rel="stylesheet" type="text/css" />

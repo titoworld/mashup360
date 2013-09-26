@@ -1,17 +1,6 @@
 ;var galf = galf || {};
 galf = { 
-	connectToParse: function() {
-		var applicationId = "cfZHQ6k3IoPCcQBmXmwmuO9tb0fpVxDZUmgCWBXd";
- 		var javaScriptKey = "2xfMrgnnxUUpib0CCu2tepB7IWCvs4D01f83bM2w";
- 		Parse.initialize(applicationId, javaScriptKey);
-	},
-	getUrlVars: function() {
-		    var vars = {};
-		    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
-		        vars[key] = value;
-		    });
-		    return vars;
-	 },
+
 	getUsers: function() {
 		galf.connectToParse();
 		var usersTable = $('#usersTable').dataTable({ "aoColumnDefs": [ { "bSortable": false, "aTargets": [ 0 ] } ], iDisplayLength:100 });

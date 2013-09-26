@@ -1,6 +1,7 @@
-<head>
-<meta charset="utf-8">
-
+<? 
+$hash = $_SESSION['userHash'];
+include("../config.php");
+ ?>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="">
 <meta name="author" content="">
@@ -16,18 +17,8 @@
 <!-- Uniform Stylesheet -->
 <link rel="stylesheet" href="plugins/uniform/css/uniform.default.css" media="screen">
 
-<!-- Plugin Stylsheets first to ease overrides -->
-
 <!-- iButton -->
 <link rel="stylesheet" href="plugins/ibutton/jquery.ibutton.css" media="screen">
-
-<!-- Circular Stat -->
-<link rel="stylesheet" href="custom-plugins/circular-stat/circular-stat.css">
-
-<!-- Fullcalendar -->
-<link rel="stylesheet" href="plugins/fullcalendar/fullcalendar.css" media="screen">
-<link rel="stylesheet" href="plugins/fullcalendar/fullcalendar.print.css" media="print">
-
 <!-- End Plugin Stylesheets -->
 
 <!-- Main Layout Stylesheet -->
@@ -36,8 +27,6 @@
 <link rel="stylesheet" href="plugins/msgbox/jquery.msgbox.css" media="screen">
 <link rel="stylesheet" href="assets/css/reveal.css">
 <link rel="stylesheet" href="assets/css/bjqs.css">
-<link rel="stylesheet" href="assets/css/colorPicker.css">
-<link rel="stylesheet" href="assets/css/minicolors.css">
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
 
 <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
@@ -94,7 +83,7 @@
                         	<nav id="navigation" class="collapse">
                             	<ul>
                                 
-                                	<li id="camposLi">
+                                	<li id="camposLi" class="active">
                                     	<span title="Table">
                                             <a id="camposLink" href="admin.php?section=POIS">
                                     		<i class="icon-globe"></i>
@@ -103,7 +92,7 @@
                                     	<ul class="inner-nav" id="campos">
                                         </ul>
                                     </li>
-                                		<li id="usuariosLi" class="active">
+                                		<li id="usuariosLi">
                                     	<span title="General">
                                             <a id="usuariosLink" href="admin.php?section=users">
                                     		<i class="icon-users"></i>

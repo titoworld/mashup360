@@ -81,7 +81,9 @@ body
     -moz-opacity: 0.5;
     filter: alpha(opacity=50);
 }
-
+#loginButt{
+	margin-bottom:8px;
+}
 #login-buttons .btn-wrap .btn
 {
     margin: 0;

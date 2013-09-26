@@ -25,101 +25,15 @@ class POIController{
       
 
 
-    static function listArticlesWord($word) {
-	   	$db = DbController::getInstance()->dbManager->articles;
-	   //	$table = $db->articles;
-	   	$user = $db->where("descripcio LIKE ?", "%".$word."%")->order("id_article + 0 ASC");
-    	$typelist = array();
-    	foreach ($user as $types) {
-    		$userData['id']= $types['id'];
-    		$userData['id_article']= $types['id_article'];
-    		$userData['tipus']= $types['tipus'];
-    		$userData['descripcio']= $types['descripcio'];
-    		$userData['id_tipus_codi']= $types['id_tipus_codi'];
-    		$userData['id_llibre']= $types['id_llibre'];
-    		$userData['id_titol']= $types['id_titol'];
-    		$userData['id_capitol']= $types['id_capitol'];
-    		$userData['id_section']= $types['id_section'];
-    		array_push($typelist,$userData);
-    	}
-    	
-    	return $typelist;
-    }
     
-     static function newBook($book) {
-     	$db = DbController::getInstance()->dbManager->llibres_codis();
-    	$typelist = array();
-    	foreach ($db as $types) {
-    		if ($book['id_llibre']==$types['id_llibre'] && $book['id_tipus_codi']==$types['id_tipus_codi']){
-    			$result['exist']="already_exist";
-    			return $result;
-    		}  		
-    	}
-     	$result = DbController::getInstance()->dbManager->llibres_codis->insert($book);
+     static function addPOI($POI) {
+     	$result = DbController::getInstance()->dbManager->POIs->insert($POI);
 	    if(!$result)
 	    	return NULL;
 	    return $result;
      }
-     //-----
-      static function newTitle($title) {
-     	$db = DbController::getInstance()->dbManager->titol_codis();
-    	$typelist = array();
-    	foreach ($db as $types) {
-    		if ($title['id_llibre']==$types['id_llibre'] && $title['id_tipus_codi']==$types['id_tipus_codi'] &&  $title['id_titol']==$types['id_titol']){
-    			$result['exist']="already_exist";
-    			return $result;
-    		}  		
-    	}
-     	$result = DbController::getInstance()->dbManager->titol_codis->insert($title);
-	    if(!$result)
-	    	return NULL;
-	    return $result;
-     }
-     //------
-       static function newCapitol($capitol) {
-     	$db = DbController::getInstance()->dbManager->capitol_codis();
-    	$typelist = array();
-    	foreach ($db as $types) {
-    		if ($capitol['id_llibre']==$types['id_llibre'] && $capitol['id_tipus_codi']==$types['id_tipus_codi'] &&  $capitol['id_titol']==$types['id_titol']&& $capitol['id_capitol']==$types['id_capitol']){
-    			$result['exist']="already_exist";
-    			return $result;
-    		}  		
-    	}
-     	$result = DbController::getInstance()->dbManager->capitol_codis->insert($capitol);
-	    if(!$result)
-	    	return NULL;
-	    return $result;
-     }
-     //--------
-       static function newSection($section) {
-        $db = DbController::getInstance()->dbManager->seccio_codis();
-    	$typelist = array();
-    	foreach ($db as $types) {
-    		if ($section['id_llibre']==$types['id_llibre'] && $section['id_tipus_codi']==$types['id_tipus_codi'] &&  $section['id_titol']==$types['id_titol']&& $section['id_capitol']==$types['id_capitol']&&$section['id_seccio']==$types['id_seccio']){
-    			$result['exist']="already_exist";
-    			return $result;
-    		}  		
-    	}
-     	$result = DbController::getInstance()->dbManager->seccio_codis->insert($section);
-	    if(!$result)
-	    	return NULL;
-	    return $result;
-     }
-     //--------
-       static function newArticle($article) {
-       		 $db = DbController::getInstance()->dbManager->articles();
-           	foreach ($db as $types) {
-	    		if ( $article['id_tipus_codi']==$types['id_tipus_codi'] &&  $article['id_article']==$types['id_article']){
-	    			$result['exist']="already_exist";
-	    			return $result;
-	    		}
-	    	}  	
-     	$result = DbController::getInstance()->dbManager->articles->insert($article);
-	    if(!$result)
-	    	return NULL;
-	    return $result;
-     }
-     //------
+    
+         
         static function updateArticle($tipusCodi,$article,$desc) {
         $user = DbController::getInstance()->dbManager->articles("id_article= ? AND id_tipus_codi= ?", $article, $tipusCodi)->fetch();
         if(!$user)
@@ -158,37 +72,7 @@ class POIController{
     	$user->delete(); 	
     	return $user;
      }     
-     static function delCapitol($capitol,$titol,$llibre,$codi) {
-     	$user = DbController::getInstance()->dbManager->capitol_codis("id_capitol = ? AND id_titol = ? AND id_llibre = ? AND id_tipus_codi= ?",$capitol, $titol,$llibre,$codi)->fetch();
-     	$child_seccio= DbController::getInstance()->dbManager->seccio_codis("id_capitol = ? AND id_titol = ? AND id_llibre = ? AND id_tipus_codi = ?",$capitol, $titol,$llibre,$codi)->fetch();
-     	$child_articles= DbController::getInstance()->dbManager->articles("id_capitol = ?  AND id_titol = ? AND id_llibre = ? AND id_tipus_codi = ?",$capitol, $titol,$llibre,$codi)->fetch();
-     	if ($child_seccio||$child_articles) {
-	     	$user['havechild']="have_child";
-	     	return $user;
-     	}     	
-     	if(!$user)
-	    	return NULL;
-    	$user->delete(); 
-    	return $user;	
-     }  
-        static function delSection($section,$capitol,$titol,$llibre,$codi) {
-     	$user = DbController::getInstance()->dbManager->seccio_codis("id_seccio = ?",$section)->fetch();
-     	$child_articles= DbController::getInstance()->dbManager->articles("id_section = ? AND id_capitol = ? AND id_titol = ? AND id_llibre = ? AND id_tipus_codi = ?",$section,$capitol,$titol,$llibre,$codi)->fetch();
-     	if ($child_articles) {
-	     	$user['havechild']="have_child";
-	     	return $user;
-     	}    
-     	if(!$user)
-	    	return NULL;
-    	$user->delete();
-    	return $user; 	
-     }    
-        static function delArticle($articleid) {
-     	$user = DbController::getInstance()->dbManager->articles("id_article = ?",$articleid)->fetch();
-     	if(!$user)
-	    	return NULL;
-    	$user->delete();
-    	return $user; 	
-     }  
+
+  
 }
 ?>

@@ -1,4 +1,4 @@
-<div id="camposModal" class="reveal-modal">
+<div id="POIModal" class="reveal-modal">
        <div class="profile">
                                     <div class="clearfix">
                                              <div class="profile-sidebar" id="thuDivCampo">

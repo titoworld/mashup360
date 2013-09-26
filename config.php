@@ -8,6 +8,8 @@ define("IMAGE_DOMAIN","http://images.farrepuche.com/");
 define("PLUGINS_DOMAIN","http://plugins.farrepuche.com/");
 define("UPLOADS_DOMAIN","http://uploads.farrepuche.com/");
 ?>
+<head>
+<meta charset="utf-8">
 <script>
 	window.API_DOMAIN="<? echo API_DOMAIN; ?>";
 	window.BACKEND_DOMAIN="<? echo BACKEND_DOMAIN ?>";

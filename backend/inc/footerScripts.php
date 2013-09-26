@@ -4,15 +4,12 @@
         </div>
     </div>
 <!-- Core Scripts -->
-
 <script src="assets/js/libs/jquery-1.8.3.min.js"></script>
 <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDwXepbvmI1Wlb_r1S5S6huEMyGYNzd3t4&sensor=false"></script>
 <script src="plugins/msgbox/jquery.msgbox.js"></script>
-<script src="js/jquery.colorPicker.js" type="text/javascript"></script>
-<script src="js/jquery.minicolors.js" type="text/javascript"></script>
 <script src="js/attrChange.js" type="text/javascript"></script>
-<script src="js/backend.js"></script>
+<script src="js/backend.js?random=<?php echo uniqid(); ?>"></script>
 <script src="bootstrap/js/bootstrap.min.js"></script>
 <script src="assets/js/libs/jquery.placeholder.min.js"></script>
 <script src="assets/js/libs/jquery.mousewheel.min.js"></script>

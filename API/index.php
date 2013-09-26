@@ -35,6 +35,20 @@ $app->get("/llista_POIs", function () use($app, $db) {
     }
      echo wsResponse("llistaPOI", $responseData);
 });
+//afegir POI
+$app->get("/afegir_POI", function () use($app, $db) {
+	$app->response()->header("Content-Type", "application/json");
+	$post = $app->request()->post();
+	$result = POIController::addPOI();
+	 if(!$result) {
+	    	 echo wsError(_("Error afegint el POI"));
+	    	 return;
+    	 }
+    foreach($result as $llista) {
+    $responseData[] = $llista;
+    }
+     echo wsResponse("Afegint_POI", $responseData);
+});
 
 
 //get POI PANORAMIC IMAGE URL
