@@ -36,10 +36,31 @@ $app->get("/llista_POIs", function () use($app, $db) {
      echo wsResponse("llistaPOI", $responseData);
 });
 //afegir POI
-$app->get("/afegir_POI", function () use($app, $db) {
+$app->post("/afegir_POI", function () use($app, $db) {
 	$app->response()->header("Content-Type", "application/json");
 	$post = $app->request()->post();
-	$result = POIController::addPOI();
+	 $fieldCheck = array("POI_id", "POI_name","POI_email","POI_360url");
+    foreach($fieldCheck as $check) {
+	     if(!isset($post[$check])) {
+		     echo wsError(_($check." not provided"));
+		     return;
+		 }
+    }
+
+	$POI['POI_id']= $post['POI_id'];
+	$POI['POI_name']= $post['POI_name'];
+	$POI['POI_description']= $post['POI_description'];
+	$POI['POI_telefon']= $post['POI_telefon'];
+	$POI['POI_email']= $post['POI_email'];
+	$POI['POI_postal']= $post['POI_postal'];
+	$POI['POI_ciutat']= $post['POI_ciutat'];
+	$POI['POI_codi_postal']= $post['POI_codi_postal'];
+	$POI['POI_web']= $post['POI_web'];
+	$POI['POI_latitude']= $post['POI_latitude'];
+	$POI['POI_longitude']= $post['POI_longitude'];
+	$POI['POI_360url']= $post['POI_360url'];
+	$POI['POI_mini_logo']= $post['POI_mini_logo'];
+	$result = POIController::addPOI($POI);
 	 if(!$result) {
 	    	 echo wsError(_("Error afegint el POI"));
 	    	 return;

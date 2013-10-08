@@ -174,3 +174,16 @@ span.titleLocation{
 	height:120px !important;
 	padding-top:5px !important;
 }
+#descriptionCaptiontext{
+	font-style: italic;
+	font-size: 0.8em;
+	line-height: 2em;
+}
+#rightInfoSide{
+	float: right;
+	color:white;
+	margin-top: -30px;
+	font-size: 0.8em;
+	text-align: right;
+	line-height: 1.5em;
+}

@@ -49,8 +49,10 @@ googleMaps = {
 		createMarker: function(lat,lng,value) {
 				var idPOI = value["POI_id"];
 				var name= value["POI_name"]
+				var descripcio = value["POI_description"];
 				var html="<span>"+value["POI_description"]+"</span>";
 				var POIURL=value["POI_360url"];
+				var direccioPostal = value["POI_postal"] +",/,"+ value["POI_ciutat"] +",/," + value["POI_codi_postal"];
 				var myLatlng = new google.maps.LatLng(lat,lng);
 				var contentString =html;
 			    var marker = new google.maps.Marker({
@@ -61,12 +63,13 @@ googleMaps = {
 			        contentBubble: contentString,
 			        bounds: true,
 			        icon:window.IMAGE_DOMAIN+'green_marker.png',
-			        title: name
+			        title: name,
+			        description: descripcio,
+			        postal: direccioPostal
 			    });
 			    googleMaps.markerArray.push(marker);
 			    $("#llistaPOI").append(" <li><div class='POIElement "+idPOI+"'>"+googleMaps.displayHTMLImage("placeholder_location.png","POIThumb"+idPOI,"thumbnail","POIThumb")+"<span class='POIThumb'>"+name+"</span></div></li>");
 			    if(value["POI_mini_logo"]){
-			  
 				    $("#POIThumb"+idPOI).attr("src",window.UPLOADS_DOMAIN+"/POILogos/"+idPOI+"/"+value["POI_mini_logo"]);
 			    }
 			    googleMaps.infowindow = new google.maps.InfoWindow({
@@ -128,11 +131,16 @@ googleMaps = {
 				$("#viewer360").attr("class","seixantaAmple");
 				$("#section").attr("class","quarantaAmple");
 				if (marker){
-					$("#viewer360").append('<iframe src="'+marker.url+'"></iframe><div id="titleViewBar"><span id="titleCaptionText" class="titleLocation">'+marker.title+'</span><div id="toggleCaptionButton">'+googleMaps.displayHTMLImage("slideDownBar.png", "slideDownBar","slideBar")+'</div></div><div id="toggleViewerButton">'+googleMaps.displayHTMLImage("slideBar.png", "slideLeftBar","slideBar")+'</div>');
+					var direccio=marker.postal.split(",/,")[0];
+					var ciutat=marker.postal.split(",/,")[1];
+					var codiPostal=marker.postal.split(",/,")[2];
+					$("#viewer360").append('<iframe src="'+marker.url+'"></iframe><div id="titleViewBar"><div id="leftInfoSide"><span id="titleCaptionText" class="titleLocation">'+marker.title+'</p><span id="descriptionCaptiontext">'+marker.description+'</span></span></div><div id="rightInfoSide"><img src="'+window.IMAGE_DOMAIN+'little_gray_marker.png" alt="marker" /><span class="direccio">'+direccio+'<br/>'+ciutat + " " +codiPostal+'</span></div></p><div id="toggleCaptionButton">'+googleMaps.displayHTMLImage("slideDownBar.png", "slideDownBar","slideBar")+'</div></div><div id="toggleViewerButton">'+googleMaps.displayHTMLImage("slideBar.png", "slideLeftBar","slideBar")+'</div>');
 					$("#toggleViewerButton").unbind();
 					$("#toggleViewerButton").click(function(){
 						$("#viewer360").removeClass("seixantaAmple");
 						$("#section").removeClass("quarantaAmple");	
+						google.maps.event.trigger(googleMaps.map, 'resize');
+						googleMaps.map.setZoom(googleMaps.map.getZoom() );
 					});
 					$("#toggleCaptionButton").unbind();
 					$("#toggleCaptionButton").click(function(){

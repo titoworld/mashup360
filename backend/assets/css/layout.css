@@ -127,6 +127,9 @@ margin-top:-3px;
 #closeButt{
     margin-left:2px;
 }
+#direccionField {
+	width:190px;
+}
 #salidaVars{
     border: 1px solid grey;
     padding-top: 10px;

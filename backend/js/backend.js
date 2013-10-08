@@ -103,6 +103,9 @@ backend = {
 		       					  backend.placeMarker(myLatLng, map,null);
 		       					  $('#POIModal').reveal();
 		       				 }
+		       				 else{
+			       				 var n = noty({text: "No s'han pogut deduïr les coordenades mitjançant aquesta adreça", timeout:"3000", type:"error"});
+		       				 }
 		       			});
        					  $( "#tabs" ).tabs();
        					  $("#addPhotoButton").unbind();
@@ -163,7 +166,11 @@ backend = {
 						   });
 						   $("#eliminarCampo").unbind();
 						   $("#eliminarCampo").click(function() {
-						   		//galf.destroyCampo(e.currentTarget.id);
+						   		backend.getWS("post",objectToSend,"llista_POIs",
+									function(data){
+										
+								
+								});
 						   });						       					   
       		     });
 				});
@@ -198,67 +205,122 @@ backend = {
 	       	}
 	       	 backend.marker.setIcon(window.IMAGE_DOMAIN+"green_marker.png");		        
 	},
+	previewUploaded: function(input) {
+		if (input.files && input.files[0]) {
+	        var reader = new FileReader();
+	        reader.onload = function (e) {
+	            $('#prevImg').attr('src', e.target.result);
+	        }
+	        reader.readAsDataURL(input.files[0]);
+		}
+	},
 	getLocationVars:function(evt) {
 		backend.latitude= evt.latLng.lat().toFixed(6);
    		backend.longitude = evt.latLng.lng().toFixed(6);
 		$("#posicionField").val(backend.latitude+","+backend.longitude);
 	},
 	init: function(){
+		var geocoder = new google.maps.Geocoder();
 		backend.hash = window.hash;
+		$("#fileField").pekeUpload({theme:'bootstrap', multi: false});
+		$('#prevImg').attr('src', window.IMAGE_DOMAIN+'placeholder.png');
+		$("#logoField").unbind();
+   		$("#logoField").change(function(){
+			backend.previewUploaded(this);
+		});
 		if(backend.getUrlVars().section=="POIS"){
 			backend.POISTable = $('#POISBackendTable').dataTable({ "aoColumnDefs": [ { "bSortable": false, "aTargets": [ 0 ] } ] });
 			backend.POISEnTaula();
+			 $('#direccionField').unbind();
+			 $('#direccionField').blur(function() {
+		   		  geocoder.geocode( { 'address': $("#direccionField").val()}, function(results, status) {
+					if (status == google.maps.GeocoderStatus.OK) {	
+						latitudePOI =results[0].geometry.location.lat();
+						longitudePOI = results[0].geometry.location.lng();
+						postalCoords=latitudePOI+","+longitudePOI;
+						$("#posicionField").val(postalCoords);
+					}
+					else {
+						var n = noty({text: "No s'han pogut deduïr les coordenades mitjançant la direcció introduida", timeout:"3000", type:"error"});
+					}
+				});
+		   });
 			$("#addPOI").unbind();
 			 $("#addPOI").click(function() {
-			 	google.maps.visualRefresh = true;
-			 	navigator.geolocation.getCurrentPosition(function(pos) {
-					backend.latitude= pos.coords.latitude;
-					backend.longitude= pos.coords.longitude;
-					backend.mapOptions = {
-         				 center: new google.maps.LatLng(backend.latitude, backend.longitude),
-         				 zoom: 8,
-          				 mapTypeId: google.maps.MapTypeId.ROADMAP,
-          				  zoomControlOptions: {
-        					  style: google.maps.ZoomControlStyle.LARGE,
-      						  position: google.maps.ControlPosition.RIGHT_CENTER
-    						}
-    				}
-	       		backend.map = new google.maps.Map(document.getElementById("googleMap"),backend.mapOptions);
-	       		 $("#cerrarMapa").unbind();
-	       		 $("#cerrarMapa").click(function(){
-	   		   		$('#googleMap').removeClass("mostra").addClass("amaga");
-	   		   		$('#cerrarMapa').removeClass("mostra").addClass("amaga");
-	   		   	});
-	   		   	$('#posicionField').unbind();
-	   		   	$('#posicionField').click(function(){
-	   		   		$('#googleMap').removeClass("amaga").addClass("mostra");
-	   		   		$('#cerrarMapa').removeClass("amaga").addClass("mostra");
-					 google.maps.event.addListener(backend.map, 'click', function(e) {
-					         backend.placeMarker(e.latLng, backend.map,e);
-					  });
-					google.maps.event.trigger(backend.map, "resize");
-	   		   });
-	   		    galf.marker=null;
-			   $("#addCampoNuevo").unbind();
-			   $("#addCampoNuevo").click(function() {
-			   		var POIObject={POI_name:'',POI_description:'',POI_telefon:'',POI_email:'',POI_postal:'',POI_ciutat:'',POI_codi_postal:'',POI_web:'',POI_web:'',POI_latitude:'',POI_longitude:'',POI_360url:'',POI_mini_logo:''};
-			   		 backend.getWS("post",POIObject,"llista_POIs",
-			function(data){
-			console.log(data);
-			   });
-			   $('#prevImg').attr('src', window.IMAGE_DOMAIN+'placeholder.png');	
-			   $("#logoField").val("");
-			   $("#telefonoField").val("");
-			   $("#posicionField").val("");
-			   $("#cerrarMapa").trigger("click");
-			   $('#myPOI').reveal();
-			 });
-		 });
-		}
+				 	google.maps.visualRefresh = true;
+				 	navigator.geolocation.getCurrentPosition(function(pos) {
+						backend.latitude= pos.coords.latitude;
+						backend.longitude= pos.coords.longitude;
+						backend.mapOptions = {
+	         				 center: new google.maps.LatLng(backend.latitude, backend.longitude),
+	         				 zoom: 8,
+	          				 mapTypeId: google.maps.MapTypeId.ROADMAP,
+	          				  zoomControlOptions: {
+	        					  style: google.maps.ZoomControlStyle.LARGE,
+	      						  position: google.maps.ControlPosition.RIGHT_CENTER
+	    						}
+	    				}
+				       		backend.map = new google.maps.Map(document.getElementById("googleMap"),backend.mapOptions);
+				       		 $("#cerrarMapa").unbind();
+				       		 $("#cerrarMapa").click(function(){
+				   		   		$('#googleMap').removeClass("mostra").addClass("amaga");
+				   		   		$('#cerrarMapa').removeClass("mostra").addClass("amaga");
+				   		   	});
+				   		   	$('#posicionField').unbind();
+				   		   	$('#posicionField').click(function(){
+				   		   		$('#googleMap').removeClass("amaga").addClass("mostra");
+				   		   		$('#cerrarMapa').removeClass("amaga").addClass("mostra");
+								 google.maps.event.addListener(backend.map, 'click', function(e) {
+								         backend.placeMarker(e.latLng, backend.map,e);
+								  });
+								google.maps.event.trigger(backend.map, "resize");
+				   		   });
+				   		    backend.marker=null;
+						   $("#addPOINou").unbind();
+						   $("#addPOINou").click(function() {
+							   var name,description,telefon,email,postal,ciutat,codiPostal, latitud, longitut, web, urlPOI, logoPOI,idPOI,latitudePOI,longitudePOI, postalCoords;
+							   name= $("#POINameField").val();
+							   idPOI="A"+Math.floor(Math.random()*1001);
+							   description = $("#POIDescription").val();
+							   telefon= $("#telefonoField").val();
+							   email = $("#emailField").val();
+							   postal=$("#direccionField").val();
+							   postalCoords=$("#posicionField").val();
+							   urlPOI=$("#siteField").val();
+							   if(name=="" || description=="" || telefon=="" || email=="" || postal==""){
+							   	var n = noty({text: "S'han de completar tots els camps obligatoris per afegir el POI", timeout:"3000", type:"error"});
+							   	return 0;
+							   }/*
+							   if (backend.fileUploaded!=true ){
+								var n = noty({text: "És necessari adjuntar un ZIP amb els fitxers generats pel KRPANO", timeout:"3000", type:"error"});
+								return 0;
+							   }*/
+						
+							   var POIObject={POI_id:idPOI,POI_name:name,POI_description:description,POI_telefon:telefon,POI_email:email,POI_postal:postal,POI_ciutat:'lleida',POI_codi_postal:'25003',POI_web:urlPOI,POI_latitude:backend.latitude,POI_longitude:backend.longitude,POI_360url:'test.html',POI_mini_logo:'placeholder_location.png'};
+							  backend.getWS("post",POIObject,"afegir_POI",
+							function(data){
+								var n = noty({text: "El POI: "+name+" s'ha afegit correctament", timeout:"3000", type:"success"});
+								$("#POINameField").val("");
+								$("#POIDescription").val("");
+								$("#telefonoField").val("");
+								$("#emailField").val("");
+								$("#direccionField").val("");
+								$("#direccionField").val("");
+								$("#posicionField").val("");
+								$("#siteField").val("");
+								$("#cerrarMapa").trigger("click");
+								$('#prevImg').attr('src', window.IMAGE_DOMAIN+'placeholder.png');
+								$('#myPOI').hideModal();
+								backend.POISEnTaula();
+							   });	
+						   
+						   });
+						   $('#myPOI').reveal();
+				 });
+		});
+	  }
 	}
 };
-
-
 (function(win, doc, ns, undefined) {
     win.onload = function(){
         ns.init();

@@ -143,36 +143,15 @@
 				modalBG.css({"cursor":"pointer"})
 				modalBG.bind('click.modalEvent', function () {
 				  modal.trigger('reveal:close')
-				  
 				  $("#colorFormUpdate").empty();
-				   galf.firstCol=1;
-				   galf.extraColor="";
-				   galf.extraColor1="";
-				   galf.totalSalidas=3;
-				   galf.distanciaWhiteArray = new Array();
-				   galf.distanciaYellowArray = new Array();
-				   galf.distanciaRedArray = new Array();
-				   galf.distanciaExtraArray = new Array();
-				   galf.distanciaExtraArray1 = new Array();
-				   galf.parArray = new Array();
-				   galf.HCPArray = new Array();
+			
 				});
 			}
 			$('body').keyup(function(e) {
         		if(e.which===27){ modal.trigger('reveal:close');
         		  
 				  $("#colorFormUpdate").empty();
-				  galf.firstCol=1;
-				  galf.totalSalidas=3;
-				  galf.extraColor="";
-				  galf.extraColor1="";
-				  galf.distanciaWhiteArray = new Array();
-				  galf.distanciaYellowArray = new Array();
-				  galf.distanciaRedArray = new Array();
-				  galf.distanciaExtraArray = new Array();
-				  galf.distanciaExtraArray1 = new Array();
-				  galf.parArray = new Array();
-				  galf.HCPArray = new Array();
+				
         		 } // 27 is the keycode for the Escape key
 			});
 			

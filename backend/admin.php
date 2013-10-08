@@ -3,7 +3,7 @@
 		{
 		header("Location: index.php");
 		}
-	else{
+	else if(!$_GET["section"]){
 	$userHash=  $_SESSION['login_hash'];
 	session_destroy();
 	}
