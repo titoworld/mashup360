@@ -13,12 +13,11 @@ if (!empty($_FILES)) {
 
 	if (in_array($fileParts['extension'],$fileTypes)) {
 		move_uploaded_file($tempFile,$targetFile);
-		$IMGfound = glob($carpeta_final."*.*");
+		$IMGfound = glob($targetFolder."*.*");
 		$IMGs = $IMGfound[0];
-		$IMGsplit=explode(".",$IMGs);
-		$idPOI=$IMGsplit[0];
-		$extension=$IMGsplit[1];
-		rename($IMGs, $targetFolder . $idPOI.".".$extension);
+		$extension= substr(strrchr($IMGs,'.'),1);
+		$destination=$targetFolder.$idPOI.".".$extension;
+		rename($IMGs, $destination);
 		echo '1';
 		
 	} else {

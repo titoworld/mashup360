@@ -120,6 +120,8 @@ div#POITable{
 img.POIThumb, span.POIThumb{
 	display: table-cell;
 	vertical-align: middle;
+	max-width:80px;
+	max-height:60px;
 }
 span.POIThumb{
 	font-size:0.8em;
@@ -186,4 +188,11 @@ span.titleLocation{
 	font-size: 0.8em;
 	text-align: right;
 	line-height: 1.5em;
+}
+#outDoorButton,#inDoorButton{
+	cursor:pointer;
+	opacity:0.8;
+}
+#outDoorButton:hover,#inDoorButton:hover{
+	opacity:1;
 }
