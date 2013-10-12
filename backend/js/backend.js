@@ -222,11 +222,10 @@ backend = {
 	init: function(){
 		var geocoder = new google.maps.Geocoder();
 		backend.hash = window.hash;
-		$("#fileField").pekeUpload({theme:'bootstrap', multi: false});
 		$('#prevImg').attr('src', window.IMAGE_DOMAIN+'placeholder.png');
 		$("#logoField").unbind();
    		$("#logoField").change(function(){
-			backend.previewUploaded(this);
+		backend.previewUploaded(this);
 		});
 		if(backend.getUrlVars().section=="POIS"){
 			backend.POISTable = $('#POISBackendTable').dataTable({ "aoColumnDefs": [ { "bSortable": false, "aTargets": [ 0 ] } ] });
@@ -247,6 +246,11 @@ backend = {
 		   });
 			$("#addPOI").unbind();
 			 $("#addPOI").click(function() {
+					backend.POIid="POI_"+ Math.round((new Date()).getTime()/1000);
+					$("#zipFileField").append("<input type='file' id='fileField' name='fileField' />");
+					$("#imgFileField").append("<input type='file' id='imgField' name='imgField' />");
+					$("#fileField").pekeUpload({theme:'bootstrap', multi: false, POIid:backend.POIid, uploadType:'file'});
+					$("#imgField").pekeUpload({theme:'bootstrap', multi: false, POIid:backend.POIid, uploadType:'img'});
 				 	google.maps.visualRefresh = true;
 				 	navigator.geolocation.getCurrentPosition(function(pos) {
 						backend.latitude= pos.coords.latitude;
@@ -279,8 +283,9 @@ backend = {
 						   $("#addPOINou").unbind();
 						   $("#addPOINou").click(function() {
 							   var name,description,telefon,email,postal,ciutat,codiPostal, latitud, longitut, web, urlPOI, logoPOI,idPOI,latitudePOI,longitudePOI, postalCoords;
+							   
 							   name= $("#POINameField").val();
-							   idPOI="A"+Math.floor(Math.random()*1001);
+							   idPOI=backend.POIid;
 							   description = $("#POIDescription").val();
 							   telefon= $("#telefonoField").val();
 							   email = $("#emailField").val();
@@ -295,8 +300,11 @@ backend = {
 								var n = noty({text: "És necessari adjuntar un ZIP amb els fitxers generats pel KRPANO", timeout:"3000", type:"error"});
 								return 0;
 							   }*/
-						
-							   var POIObject={POI_id:idPOI,POI_name:name,POI_description:description,POI_telefon:telefon,POI_email:email,POI_postal:postal,POI_ciutat:'lleida',POI_codi_postal:'25003',POI_web:urlPOI,POI_latitude:backend.latitude,POI_longitude:backend.longitude,POI_360url:'test.html',POI_mini_logo:'placeholder_location.png'};
+							   var minilogo="";
+							   if(window.fileUploadedName){
+							   		minilogo=idPOI+"."+window.fileUploadedName.split(".")[1];
+							   }
+							   var POIObject={POI_id:idPOI,POI_name:name,POI_description:description,POI_telefon:telefon,POI_email:email,POI_postal:postal,POI_ciutat:'lleida',POI_codi_postal:'25003',POI_web:urlPOI,POI_latitude:backend.latitude,POI_longitude:backend.longitude,POI_360url:window.UPLOADS_DOMAIN+'360POIView/'+idPOI,POI_mini_logo:minilogo};
 							  backend.getWS("post",POIObject,"afegir_POI",
 							function(data){
 								var n = noty({text: "El POI: "+name+" s'ha afegit correctament", timeout:"3000", type:"success"});

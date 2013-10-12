@@ -14,26 +14,48 @@
 (function($) {
 
   $.fn.pekeUpload = function(options){
-
     // default configuration properties
-    var defaults = {
-      onSubmit:       false,
-      btnText:        "Seleccionar ZIP...",
-      url:        "upload.php",
-      theme:        "custom",
-      field:        "file",
-      data:         null,
-      multi:        true,
-      showFilename:       true,
-      showPercent:        true,
-      showErrorAlerts:    true,
-      allowedExtensions:  "",
-      invalidExtError:    "Extensió invàlida",
-      maxSize:      0,
-      sizeError:      "La mida del fitxer és massa gran",
-      onFileError:        function(file,error){},
-      onFileSuccess:      function(file,data){}
-    };
+    var defaults;
+    if (options.uploadType=='file'){
+	   defaults = {
+	      onSubmit:       false,
+	      btnText:        "Seleccionar ZIP...",
+	      url:        "upload.php?POI="+options.POIid,
+	      theme:        "custom",
+	      field:        "file",
+	      data:         null,
+	      multi:        true,
+	      showFilename:       true,
+	      showPercent:        true,
+	      showErrorAlerts:    true,
+	      allowedExtensions:  "",
+	      invalidExtError:    "Extensió invàlida",
+	      maxSize:      0,
+	      sizeError:      "La mida del fitxer és massa gran",
+	      onFileError:        function(file,error){},
+	      onFileSuccess:      function(file,data){}
+	    };
+	}
+	else if (options.uploadType=='img'){
+		  defaults = {
+	      onSubmit:       false,
+	      btnText:        "Seleccionar Imatge...",
+	      url:        "uploadImg.php?POI="+options.POIid,
+	      theme:        "custom",
+	      field:        "file",
+	      data:         null,
+	      multi:        true,
+	      showFilename:       true,
+	      showPercent:        true,
+	      showErrorAlerts:    true,
+	      allowedExtensions:  "",
+	      invalidExtError:    "Extensió invàlida",
+	      maxSize:      0,
+	      sizeError:      "La mida del fitxer és massa gran",
+	      onFileError:        function(file,error){},
+	      onFileSuccess:      function(file,data){}
+	      };
+	}
 
     var options = $.extend(defaults, options);
 
@@ -98,6 +120,10 @@
                 obj.next('a').next('div').find('.pekeup-progress-bar:first').text(percent+"%");
                 if (data==1){
                   backend.fileUploaded=true;
+                  if (options.uploadType=='img'){
+                  	$("#prevImg").attr('src',window.UPLOADS_DOMAIN+'POILogos/'+options.POIid+"/"+file.name);
+                  	 window.fileUploadedName = file.name;
+                  }
                   if (options.multi==false){
                     obj.attr('disabled','disabled');
                   }

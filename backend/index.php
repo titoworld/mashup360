@@ -11,11 +11,8 @@
 <link rel="stylesheet" href="plugins/uniform/css/uniform.default.css" media="screen">
 <link rel="stylesheet" href="assets/css/fonts/icomoon/style.css" media="screen">
 <link rel="stylesheet" href="assets/css/login.css" media="screen">
-
 <title>Mashup360 :: Administració Backend</title>
-
 </head>
-
 <body>
     <div id="login-wrap">
     	<div id="login-logo"><img src="images/logo.png" alt="logo" /></div>

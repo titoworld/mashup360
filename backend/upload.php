@@ -1,12 +1,9 @@
 <?php
-/*
-PekeUpload
-Copyright (c) 2013 Pedro Molina
-*/
 
 // Define a destination
-
-$targetFolder = '../uploads/360POIView/'; // Relative to the root
+$idPOI=$_GET["POI"];
+//mkdir("../uploads/360POIView/".$idPOI,0777);
+$targetFolder = '../uploads/test/'; // Relative to the root
 
 
 if (!empty($_FILES)) {
@@ -18,22 +15,25 @@ if (!empty($_FILES)) {
 	if (in_array($fileParts['extension'],$fileTypes)) {
 		move_uploaded_file($tempFile,$targetFile);
 		$zip_manager = new Zip_manager();
-		$archivo_zip = $targetFolder.$_FILES['file']['name']; 
-		$explode_carpeta = explode(".zip", $archivo_zip);  
-		$carpeta_final = $explode_carpeta[0];  
-		$listado = $zip_manager->listar($archivo_zip); 
+		$fitxer_zip = $targetFolder.$_FILES['file']['name']; 
+		$explode_carpeta = explode(".zip", $fitxer_zip);  
+		$carpeta_final = $targetFolder.$idPOI."/";  
+		$listado = $zip_manager->listar($fitxer_zip); 
 		//print_r($listado);
-		$resultado = $zip_manager->extraer($archivo_zip, $carpeta_final); 
+		$resultado = $zip_manager->extraer($fitxer_zip, $carpeta_final); 
 		if (!$resultado){
-		echo "Error: no se ha podido extraer el archivo";
+		echo "Error: no s'ha pogut extreure el fitxer";
 		}
 		else{
 			echo '1';
+			$HTMLs = glob($carpeta_final."*.html");
+			rename($HTMLs[0], $carpeta_final . "index.html");
+			unlink($fitxer_zip);
 		}
 
 		
 	} else {
-		echo 'Invalid file type.';
+		echo "Tipus d'arxiu invàlid.";
 	}
 }
 

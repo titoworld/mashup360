@@ -224,6 +224,7 @@ opacity:0.6;
     margin-left: 54px;
     width:426px;
 }
+
 #direccionDivField, #posicionDivField{
     width:40%;
     display: inline-block;
@@ -237,46 +238,12 @@ opacity:0.6;
     transition: all 1s ease 0s;
     opacity: 0.6 !important;
 }
-#distrojas,#parrojas,#ventajarojas,#patronrojas,#curvarojas,#distamarillas,#paramarillas,#ventajaamarillas,#patronamarillas,#curvaamarillas,#distazules,#parazules,#ventajaazules,#patronazules,#curvaazules,#distnaranjas,#parnaranjas,#ventajanaranjas,#patronnaranjas,#curvanaranjas,#distblancas,#parblancas,#ventajablancas,#patronblancas,#curvablancas{
-    width:50px;
-    margin-top:-0.2px;
-    margin-left:5px;
-    display:inline;
-    height: 100%;
-    padding:0;
-    padding-left:2px;
-    border-radius: 0px;
+#fileField,#imgField{
+	visibility: hidden;
+	width:0px;
+	height:0px;
 }
-#salidaVars{
-    width:500px;
-}
-#colorFormUpdate{
-    margin-left: -16px;
-}
-#moreSalidas, #clearSalidas{
-    margin-top: -7px;
-    height: 27px;
-}
-#coloursplusField{
-    border-radius: 0px;
-    height: 17px;
-    margin-top: -7px;
-}
-.minicolors-swatch{
-    margin-top:-8px !important;
-}
-.colorPicker-picker{
-    width:120px !important;
-}
-#colourSelector, #colourExtraSelector{
-    float:left;
-}
-#hoyoNum {
-display:none;
-}
-#contentPicker{
-    display:inline;
-}
+
 .dotBorder{
     border: 1px black dotted;
 }

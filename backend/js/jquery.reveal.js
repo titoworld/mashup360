@@ -143,14 +143,18 @@
 				modalBG.css({"cursor":"pointer"})
 				modalBG.bind('click.modalEvent', function () {
 				  modal.trigger('reveal:close')
+				  $("#prevImg").attr('src','http://images.farrepuche.com/placeholder.png');
 				  $("#colorFormUpdate").empty();
-			
+				  $("#zipFileField").empty();
+				   $("#imgFileField").empty();
 				});
 			}
 			$('body').keyup(function(e) {
         		if(e.which===27){ modal.trigger('reveal:close');
-        		  
+        		$("#prevImg").attr('src','http://images.farrepuche.com/placeholder.png');
+        		  $("#zipFileField").empty();
 				  $("#colorFormUpdate").empty();
+				   $("#imgFileField").empty();
 				
         		 } // 27 is the keycode for the Escape key
 			});
