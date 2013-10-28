@@ -12,7 +12,7 @@ require_once "controllers/DbController.php";
 require_once "controllers/UserController.php";
 require_once "controllers/POIController.php";
 //connexió amb la base de dades
-$pdo = new PDO('mysql:host=mysql.farrepuche.com;port=3306;dbname=mashup360', 'tfc_mashup', 'mashup360', array( PDO::ATTR_PERSISTENT => false));
+$pdo = new PDO('mysql:host='.DB_HOST.';port=3306;dbname='.DB_NAME, DB_USERNAME, DB_PW, array( PDO::ATTR_PERSISTENT => false));
 $db = new NotORM($pdo);
 $db->debug = function($q, $p) {
         error_log($q);

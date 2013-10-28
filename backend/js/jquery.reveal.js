@@ -143,7 +143,7 @@
 				modalBG.css({"cursor":"pointer"})
 				modalBG.bind('click.modalEvent', function () {
 				  modal.trigger('reveal:close')
-				  $("#prevImg").attr('src','http://images.farrepuche.com/placeholder.png');
+				  $('#prevImg').attr('src', window.IMAGE_DOMAIN+'placeholder.png');
 				  $("#colorFormUpdate").empty();
 				  $("#zipFileField").empty();
 				   $("#imgFileField").empty();
@@ -151,7 +151,7 @@
 			}
 			$('body').keyup(function(e) {
         		if(e.which===27){ modal.trigger('reveal:close');
-        		$("#prevImg").attr('src','http://images.farrepuche.com/placeholder.png');
+        		$('#prevImg').attr('src', window.IMAGE_DOMAIN+'placeholder.png');
         		  $("#zipFileField").empty();
 				  $("#colorFormUpdate").empty();
 				   $("#imgFileField").empty();

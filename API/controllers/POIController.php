@@ -17,6 +17,7 @@ class POIController{
     		$userData['POI_latitude']= $types['POI_latitude'];
     		$userData['POI_longitude']= $types['POI_longitude'];
     		$userData['POI_360url']= $types['POI_360url'];
+    		$userData['POI_360url2']= $types['POI_360url2'];
     		$userData['POI_mini_logo']= $types['POI_mini_logo'];
 	    	array_push($typelist,$userData);
     	}

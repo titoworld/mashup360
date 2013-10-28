@@ -113,57 +113,9 @@ backend = {
 						   		$("#uploadPhoto").addClass("mostra");
 						   		$("#contentPhoto").addClass("amaga");
 						   });
-						   $("#uploadFotos").unbind();
-						    $("#uploadFotos").click(function() {
-						     		var fotoClass= Parse.Object.extend("campoPhotoGallery");
-									var nuevaFoto = new fotoClass();
-									var fileUploadControl = $("#fotoFileCampo")[0];
-									if (fileUploadControl.files.length > 0) {
-										var file = fileUploadControl.files[0];
-										var name = "photo.jpg";
- 									}
- 									else {
- 										return 0;
- 									}							
-									$("#uploadPhoto").removeClass("mostra");
-	   								$("#contentPhoto").removeClass("amaga");
-									//$("#camposBox").hideModal();
-									$("#"+id).trigger("click");								
-						     });
+						  
 						      $("#removePhotoButton").unbind();
-						   $("#removePhotoButton").click(function() {
-						   	var fotos= Parse.Object.extend("campoPhotoGallery");
-							var query = new Parse.Query(fotos);
-							$.msgbox("Confirma que desea eliminar esta foto ?", {
-								type: "confirm",
-								buttons : [
-									{type: "submit", value: "Si"},
-									{type: "submit", value: "No"}
-								]
-							}, function(result) {
-									if (result=="Si") {
-										query.get(window.currentImage, {
-										  success: function(fotoObject) {
-										  		fotoObject.destroy({
-										 			 success: function(myObject) {
-										   				$("#camposBox").hideModal();
-														$("#"+id).trigger("click");
-										 			 },
-													  error: function(myObject, error) {
-										  				}
-												});
-										  },
-										  error: function(object,error) {
-
-										  }
-										});
-									}
-								});
-						   });
-						   $("#modificarCampo").unbind();
-						   $("#modificarCampo").click(function() {
-						   		//galf.updateCampo(e.currentTarget.id);
-						   });
+						  
 						   $("#eliminarCampo").unbind();
 						   $("#eliminarCampo").click(function() {
 						   		backend.getWS("post",objectToSend,"llista_POIs",
@@ -316,6 +268,9 @@ backend = {
 								$("#direccionField").val("");
 								$("#posicionField").val("");
 								$("#siteField").val("");
+							   $("#colorFormUpdate").empty();
+							   $("#zipFileField").empty();
+							   $("#imgFileField").empty();
 								$("#cerrarMapa").trigger("click");
 								$('#prevImg').attr('src', window.IMAGE_DOMAIN+'placeholder.png');
 								$('#myPOI').hideModal();

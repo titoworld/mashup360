@@ -50,8 +50,9 @@ googleMaps = {
 				var idPOI = value["POI_id"];
 				var name= value["POI_name"]
 				var descripcio = value["POI_description"];
-				var html="<span>"+value["POI_description"]+"</span>";
+				var html="<span>"+value["POI_name"]+"</span>";
 				var POIURL=value["POI_360url"];
+				var POIURL2=value["POI_360url2"];
 				var direccioPostal = value["POI_postal"] +",/,"+ value["POI_ciutat"] +",/," + value["POI_codi_postal"];
 				var myLatlng = new google.maps.LatLng(lat,lng);
 				var contentString =html;
@@ -60,6 +61,7 @@ googleMaps = {
 			        map: googleMaps.map,
 			        id: idPOI,
 			        url: POIURL,
+			        url2: POIURL2,
 			        contentBubble: contentString,
 			        bounds: true,
 			        icon:window.IMAGE_DOMAIN+'green_marker.png',
@@ -70,7 +72,7 @@ googleMaps = {
 			    googleMaps.markerArray.push(marker);
 			    $("#llistaPOI").append(" <li><div class='POIElement "+idPOI+"'>"+googleMaps.displayHTMLImage("placeholder_location.png","POIThumb"+idPOI,"thumbnail","POIThumb")+"<span class='POIThumb'>"+name+"</span></div></li>");
 			    if(value["POI_mini_logo"]){
-				    $("#POIThumb"+idPOI).attr("src",window.UPLOADS_DOMAIN+"/POILogos/"+idPOI+"/"+value["POI_mini_logo"]);
+				    $("#POIThumb"+idPOI).attr("src",window.UPLOADS_DOMAIN+"POILogos/"+idPOI+"/"+value["POI_mini_logo"]);
 			    }
 			    googleMaps.infowindow = new google.maps.InfoWindow({
 						content: html,
@@ -126,21 +128,40 @@ googleMaps = {
 					return '<img id="'+id+'" src="'+window.IMAGE_DOMAIN+file+'" alt="'+alt+'" />';
 				}
 			},
+			centerOffsetMap: function(marker,offsetx,offsety){
+				var scale = Math.pow(2, googleMaps.map.getZoom());
+				var pixelOffset = new google.maps.Point((offsetx/scale) || 0,(offsety/scale) ||0);
+				var worldCoordinateCenter = googleMaps.map.getProjection().fromLatLngToPoint(marker.getPosition());
+				var nouCentre = new google.maps.Point(
+				    worldCoordinateCenter.x - pixelOffset.x,
+				    worldCoordinateCenter.y + pixelOffset.y
+				);
+				var newCenter = googleMaps.map.getProjection().fromPointToLatLng(nouCentre);
+				googleMaps.map.panTo(newCenter);
+			},
 			displayPanorama: function(marker){
 				$("#viewer360").empty();
+				googleMaps.centerOffsetMap(marker,-400,0);
 				$("#viewer360").attr("class","seixantaAmple");
 				$("#section").attr("class","quarantaAmple");
 				if (marker){
 					var direccio=marker.postal.split(",/,")[0];
 					var ciutat=marker.postal.split(",/,")[1];
 					var codiPostal=marker.postal.split(",/,")[2];
-					$("#viewer360").append('<iframe src="'+marker.url+'"></iframe><div id="titleViewBar"><div id="leftInfoSide"><span id="titleCaptionText" class="titleLocation">'+marker.title+'</p><span id="descriptionCaptiontext">'+marker.description+'</span></span></div><div id="rightInfoSide"><img src="'+window.IMAGE_DOMAIN+'little_gray_marker.png" alt="marker" /><span class="direccio">'+direccio+'<br/>'+ciutat + " " +codiPostal+'</span></div></p><div id="toggleCaptionButton">'+googleMaps.displayHTMLImage("slideDownBar.png", "slideDownBar","slideBar")+'</div></div><div id="toggleViewerButton">'+googleMaps.displayHTMLImage("slideBar.png", "slideLeftBar","slideBar")+'</div>');
+					var buttons="";
+					if (marker.url2){
+						buttons="<div id='inOutDoor'><a href='"+marker.url+"' target='vista360frame'><img id='outDoorButton' src='"+window.IMAGE_DOMAIN+"outHouse.png' title='Exterior' alt='out' /></a><a href='"+marker.url2+"' target='vista360frame'><img src='"+window.IMAGE_DOMAIN+"inHouse.png' id='inDoorButton' title='Interior' alt='in' /></a></div>";
+					}
+					$("#viewer360").append('<iframe id="vista360frame" src="'+marker.url+'"></iframe><div id="titleViewBar"><div id="leftInfoSide"><span id="titleCaptionText" class="titleLocation">'+marker.title+'</p><span id="descriptionCaptiontext">'+marker.description+'</span></span></div><div id="rightInfoSide"><img src="'+window.IMAGE_DOMAIN+'little_gray_marker.png" alt="marker" /><span class="direccio">'+direccio+'<br/>'+ciutat + " " +codiPostal+'</span>'+buttons+'</div></p><div id="toggleCaptionButton">'+googleMaps.displayHTMLImage("slideDownBar.png", "slideDownBar","slideBar")+'</div></div><div id="toggleViewerButton">'+googleMaps.displayHTMLImage("slideBar.png", "slideLeftBar","slideBar")+'</div>');
 					$("#toggleViewerButton").unbind();
 					$("#toggleViewerButton").click(function(){
 						$("#viewer360").removeClass("seixantaAmple");
 						$("#section").removeClass("quarantaAmple");	
-						google.maps.event.trigger(googleMaps.map, 'resize');
-						googleMaps.map.setZoom(googleMaps.map.getZoom() );
+						googleMaps.centerOffsetMap(marker,0,0);
+						setTimeout(function() {
+						      google.maps.event.trigger(googleMaps.map, 'resize');
+						      googleMaps.map.fitBounds();
+						   }, 2000)
 					});
 					$("#toggleCaptionButton").unbind();
 					$("#toggleCaptionButton").click(function(){
@@ -207,7 +228,6 @@ googleMaps = {
 						
 		},
 			poiTable: function(){
-			var geocoder = new google.maps.Geocoder();
 			var latitude;
 			var longitude;
 			var POIURL;
@@ -220,23 +240,17 @@ googleMaps = {
 			  function(data){	
 				$.each(data.llistaPOI, function(index,value){
 					POIURL = value["POI_360url"];
-					address= value["POI_postal"] + "," + value["POI_ciutat"];
-						geocoder.geocode( { 'address': address}, function(results, status) {
-						if (status == google.maps.GeocoderStatus.OK) {	
-							latitude =results[0].geometry.location.lat();
-							unique_id= value["POI_id"];
-							longitude = results[0].geometry.location.lng();
-							googleMaps.LatLngList[index] = new google.maps.LatLng (latitude,longitude);
-							googleMaps.createMarker(latitude,longitude,value);
-							if (index==data.llistaPOI.length-1){
-								googleMaps.clustering();	
-								googleMaps.poiWindow();
-							}
-						}
-						else {
-							console.log("Geocode was not successful for the following reason: " + status);
-						 }
-						 });
+					latitude =value["POI_latitude"];
+					unique_id= value["POI_id"];
+					longitude = value["POI_longitude"];
+					googleMaps.LatLngList[index] = new google.maps.LatLng (latitude,longitude);
+					googleMaps.createMarker(latitude,longitude,value);
+					if (index==data.llistaPOI.length-1){
+						googleMaps.clustering();	
+						googleMaps.poiWindow();
+					}
+					
+						
 				});			
 			});
 		},
