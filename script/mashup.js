@@ -258,10 +258,9 @@ googleMaps = {
 			loadScript: function() {
 					var script = document.createElement('script');
 					script.type = 'text/javascript';
-					script.src = 'https://maps.googleapis.com/maps/api/js?sensor=false&' + 'callback=googleMaps.initialize';
+					script.src = 'https://maps.googleapis.com/maps/api/js?key='+window.GOOGLE_API_KEY+'&sensor=false&' + 'callback=googleMaps.initialize';
 					document.body.appendChild(script);
 			},
-	
 
 };
 
