@@ -1,14 +1,14 @@
 <?
+
+define("API_DOMAIN", "http://api-handler.farrepuche.com/API/");
+define("BACKEND_DOMAIN", "http://backend-admin.farrepuche.com/backend/");
+define("MAIN_DOMAIN","http://mashup.farrepuche.com/");
+define("STYLE_DOMAIN","http://css3.farrepuche.com/css/");
+define("SCRIPT_DOMAIN","http://javascript.farrepuche.com/script/");
+define("IMAGE_DOMAIN","http://img.farrepuche.com/img/");
+define("PLUGINS_DOMAIN","http://plugs.farrepuche.com/plugins/");
+define("UPLOADS_DOMAIN","http://upload.farrepuche.com/uploads/");
 /*
-define("API_DOMAIN", "http://api.farrepuche.com/");
-define("BACKEND_DOMAIN", "http://backend.farrepuche.com/");
-define("MAIN_DOMAIN","http://tfc.farrepuche.com/");
-define("STYLE_DOMAIN","http://css.farrepuche.com/");
-define("SCRIPT_DOMAIN","http://script.farrepuche.com/");
-define("IMAGE_DOMAIN","http://images.farrepuche.com/");
-define("PLUGINS_DOMAIN","http://plugins.farrepuche.com/");
-define("UPLOADS_DOMAIN","http://uploads.farrepuche.com/");
-*/
 define("API_DOMAIN", "http://demo.farrepuche.com/API/");
 define("BACKEND_DOMAIN", "http://demo.farrepuche.com/backend/");
 define("MAIN_DOMAIN","http://demo.farrepuche.com/");
@@ -17,7 +17,7 @@ define("SCRIPT_DOMAIN","http://demo.farrepuche.com/script/");
 define("IMAGE_DOMAIN","http://demo.farrepuche.com/img/");
 define("PLUGINS_DOMAIN","http://demo.farrepuche.com/plugins/");
 define("UPLOADS_DOMAIN","http://demo.farrepuche.com/uploads/");
-
+*/
 
 ?>
 <head>
