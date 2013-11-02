@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <? include("pages/header.php") ?>
 <body>
-<header class="widthPage"><img src="http://images.farrepuche.com/logo.png" id="logo" alt="logo"/>
+<header class="widthPage"><img src="<? echo IMAGE_DOMAIN; ?>logo.png" id="logo" alt="logo"/>
 	<nav>
 	<ul id="topNavMenu">
 		<li id="adminSection"><span class="topMenuOption">&nbsp;Administració&nbsp;&nbsp;|</span></li>
