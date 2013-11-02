@@ -17,7 +17,7 @@ else if ($_GET["MCSD"]=="true"){
 	define("SCRIPT_DOMAIN","http://mashup.farrepuche.com/script/");
 	define("IMAGE_DOMAIN","http://mashup.farrepuche.com/img/");
 	define("PLUGINS_DOMAIN","http://mashup.farrepuche.com/plugins/");
-	define("UPLOADS_DOMAIN","http://demo.farrepuche.com/uploads/");
+	define("UPLOADS_DOMAIN","http://mashup.farrepuche.com/uploads/");
 }
 
 ?>
