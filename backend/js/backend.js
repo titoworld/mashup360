@@ -56,6 +56,15 @@ backend = {
 			   });
 			 }
 	 },
+	 usersEnTaula: function(){
+		backend.usersTable.fnClearTable();  
+		backend.getWS("get",null,"llista_usuaris",
+			function(data){
+				$.each(data.llistaPOI, function(index,value) {
+					var a = backend.usersTable.fnAddData([value.nom_usuari,value.tipus_usuari,value.lastLogin,'<a href="#>Baja</a>']);
+				});
+			});
+	 },
 	 POISEnTaula: function(){
 		 backend.POISTable.fnClearTable();  
 		 backend.getWS("get",null,"llista_POIs",
@@ -179,6 +188,10 @@ backend = {
    		$("#logoField").change(function(){
 		backend.previewUploaded(this);
 		});
+		if(backend.getUrlVars().section=="POIS"){
+			backend.usersTable = $('#usersTable').dataTable({ "aoColumnDefs": [ { "bSortable": false, "aTargets": [ 0 ] } ] });
+
+		}
 		if(backend.getUrlVars().section=="POIS"){
 			backend.POISTable = $('#POISBackendTable').dataTable({ "aoColumnDefs": [ { "bSortable": false, "aTargets": [ 0 ] } ] });
 			backend.POISEnTaula();

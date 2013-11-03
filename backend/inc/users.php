@@ -1,10 +1,12 @@
 <section id="main" class="clearfix">
                         	<div id="main-header" class="page-header">
                                 <h1 id="main-heading">
-                                	Gestión de usuarios<span>Gestionar los usuarios de GALF</span>
+                                	Gestió d'usuaris<span>Gestionar els usuaris</span>
                                 </h1>
                             </div>
-                            
+                               <div id="campsActions">
+                    <button id="addUser" class="btn btn-success"><i class="icol-layer-treansparent"></i> Nou Usuari</button>
+            </div>
                             <div id="main-content">
                             	
                                 
@@ -13,12 +15,10 @@
                                             <table id="usersTable" class="table table-striped">
                                                 <thead>
                                                     <tr>
-                                                        <th>Username</th>
-                                                        <th>Baja</th>
-                                                        <th>Name</th>
-                                                        <th>E-mail</th>
-                                                        <th>Club</th>
-                                                        <th>City</th>
+                                                        <th>Nom d'usuari</th>
+                                                        <th>Rol</th>
+                                                        <th>Últim Accés</th>
+                                                        <th>Donar de baixa</th>
                                                     </tr>
                                                 </thead>
                                             </table>
