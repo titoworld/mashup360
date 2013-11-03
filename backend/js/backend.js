@@ -57,11 +57,13 @@ backend = {
 			 }
 	 },
 	 usersEnTaula: function(){
+	 	$("#camposLi").removeClass('active');
+	 	$("#usuariosLi").addClass('active');
 		backend.usersTable.fnClearTable();  
 		backend.getWS("get",null,"llista_usuaris",
 			function(data){
-				$.each(data.llistaPOI, function(index,value) {
-					var a = backend.usersTable.fnAddData([value.nom_usuari,value.tipus_usuari,value.lastLogin,'<a href="#>Baja</a>']);
+				$.each(data.llistaUsuaris, function(index,value) {
+					var a = backend.usersTable.fnAddData([value.nom_usuari,value.tipus_usuari,value.lastLogin,' <button id="delUser" class="btn btn-danger"><i class="icol-delete"></i> Borrar Usuari</button>']);
 				});
 			});
 	 },
@@ -188,7 +190,7 @@ backend = {
    		$("#logoField").change(function(){
 		backend.previewUploaded(this);
 		});
-		if(backend.getUrlVars().section=="POIS"){
+		if(backend.getUrlVars().section=="users"){
 			backend.usersTable = $('#usersTable').dataTable({ "aoColumnDefs": [ { "bSortable": false, "aTargets": [ 0 ] } ] });
 			backend.usersEnTaula();
 		}

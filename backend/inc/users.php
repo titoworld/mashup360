@@ -5,7 +5,7 @@
                                 </h1>
                             </div>
                                <div id="campsActions">
-                    <button id="addUser" class="btn btn-success"><i class="icol-layer-treansparent"></i> Nou Usuari</button>
+                    <button id="addUser" class="btn btn-success"><i class="icol-new"></i> Nou Usuari</button>
             </div>
                             <div id="main-content">
                             	
