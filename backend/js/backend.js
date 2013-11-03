@@ -190,7 +190,7 @@ backend = {
 		});
 		if(backend.getUrlVars().section=="POIS"){
 			backend.usersTable = $('#usersTable').dataTable({ "aoColumnDefs": [ { "bSortable": false, "aTargets": [ 0 ] } ] });
-
+			backend.usersEnTaula();
 		}
 		if(backend.getUrlVars().section=="POIS"){
 			backend.POISTable = $('#POISBackendTable').dataTable({ "aoColumnDefs": [ { "bSortable": false, "aTargets": [ 0 ] } ] });
