@@ -38,6 +38,18 @@ class UserController {
 	    return $user;
 
     }
+    static function listUsers() {
+	   	$db = DbController::getInstance()->dbManager->usuaris->order("id + 0 ASC");
+    	$typelist = array();
+    	foreach ($db as $types) {
+    		$userData['nom_usuari']= $types['nom_usuari'];
+    		$userData['email']= $types['email'];
+    		$userData['tipus_usuari']= $types['tipus_usuari'];
+    		$userData['lastLogin']= $types['lastLogin'];
+	    	array_push($typelist,$userData);
+    	}
+    	return $typelist;
+    }
     static function getNewTokenExpireTime() {
      	date_default_timezone_set('Europe/Andorra');
 	    $dateTime = new DateTime();

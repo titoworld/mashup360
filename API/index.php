@@ -35,6 +35,20 @@ $app->get("/llista_POIs", function () use($app, $db) {
     }
      echo wsResponse("llistaPOI", $responseData);
 });
+//llistar usuaris
+$app->get("/llista_usuaris", function () use($app, $db) {
+	$app->response()->header("Content-Type", "application/json");
+	$post = $app->request()->post();
+	$result = UserController::listUsers();
+	 if(!$result) {
+	    	 echo wsError(_("Error llistant els usuaris"));
+	    	 return;
+    	 }
+    foreach($result as $llista) {
+    $responseData[] = $llista;
+    }
+     echo wsResponse("llistaUsuaris", $responseData);
+});
 //afegir POI
 $app->post("/afegir_POI", function () use($app, $db) {
 	$app->response()->header("Content-Type", "application/json");
