@@ -1,15 +1,5 @@
 <?
-if ($_GET["MCSD"]!="true"){
-	define("API_DOMAIN", "http://api-handler.farrepuche.com/API/");
-	define("BACKEND_DOMAIN", "http://backend-admin.farrepuche.com/backend/");
-	define("MAIN_DOMAIN","http://mashup.farrepuche.com/");
-	define("STYLE_DOMAIN","http://css3.farrepuche.com/css/");
-	define("SCRIPT_DOMAIN","http://javascript.farrepuche.com/script/");
-	define("IMAGE_DOMAIN","http://img.farrepuche.com/img/");
-	define("PLUGINS_DOMAIN","http://plugs.farrepuche.com/plugins/");
-	define("UPLOADS_DOMAIN","http://upload.farrepuche.com/uploads/");
-}
-else if ($_GET["MCSD"]=="true"){
+if ($_GET["MCSD"]=="false"){
 	define("API_DOMAIN", "http://mashup.farrepuche.com/API/");
 	define("BACKEND_DOMAIN", "http://mashup.farrepuche.com/backend/");
 	define("MAIN_DOMAIN","http://mashup.farrepuche.com/");
@@ -18,6 +8,16 @@ else if ($_GET["MCSD"]=="true"){
 	define("IMAGE_DOMAIN","http://mashup.farrepuche.com/img/");
 	define("PLUGINS_DOMAIN","http://mashup.farrepuche.com/plugins/");
 	define("UPLOADS_DOMAIN","http://mashup.farrepuche.com/uploads/");
+}
+else if ($_GET["MCSD"]!="false"){
+	define("API_DOMAIN", "http://api-handler.farrepuche.com/API/");
+	define("BACKEND_DOMAIN", "http://backend-admin.farrepuche.com/backend/");
+	define("MAIN_DOMAIN","http://mashup.farrepuche.com/");
+	define("STYLE_DOMAIN","http://css3.farrepuche.com/css/");
+	define("SCRIPT_DOMAIN","http://javascript.farrepuche.com/script/");
+	define("IMAGE_DOMAIN","http://img.farrepuche.com/img/");
+	define("PLUGINS_DOMAIN","http://plugs.farrepuche.com/plugins/");
+	define("UPLOADS_DOMAIN","http://upload.farrepuche.com/uploads/");
 }
 
 ?>
