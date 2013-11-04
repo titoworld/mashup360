@@ -83,6 +83,7 @@ googleMaps = {
 				
 				var infowindow= googleMaps.infowindow;
 			    google.maps.event.addListener(marker, 'click', function() {
+			    	$('#'+window.markerRebot).stop(true);
 				    googleMaps.closeInfoWindows();
 			        infowindow.open(googleMaps.map,marker);
 			        googleMaps.displayPanorama(marker);
