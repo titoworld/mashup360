@@ -142,8 +142,6 @@ googleMaps = {
 			displayPanorama: function(marker){
 				$("#viewer360").empty();
 				googleMaps.centerOffsetMap(marker,-400,0);
-				$("#viewer360").attr("class","seixantaAmple");
-				$("#section").attr("class","quarantaAmple");
 				if (marker){
 					var direccio=marker.postal.split(",/,")[0];
 					var ciutat=marker.postal.split(",/,")[1];
@@ -152,7 +150,11 @@ googleMaps = {
 					if (marker.url2){
 						buttons="<div id='inOutDoor'><a href='"+marker.url+"' target='vista360frame'><img id='outDoorButton' src='"+window.IMAGE_DOMAIN+"outHouse.png' title='Exterior' alt='out' /></a><a href='"+marker.url2+"' target='vista360frame'><img src='"+window.IMAGE_DOMAIN+"inHouse.png' id='inDoorButton' title='Interior' alt='in' /></a></div>";
 					}
-					$("#viewer360").append('<iframe id="vista360frame" src="'+marker.url+'"></iframe><div id="titleViewBar"><div id="leftInfoSide"><span id="titleCaptionText" class="titleLocation">'+marker.title+'</p><span id="descriptionCaptiontext">'+marker.description+'</span></span></div><div id="rightInfoSide"><img src="'+window.IMAGE_DOMAIN+'little_gray_marker.png" alt="marker" /><span class="direccio">'+direccio+'<br/>'+ciutat + " " +codiPostal+'</span>'+buttons+'</div></p><div id="toggleCaptionButton">'+googleMaps.displayHTMLImage("slideDownBar.png", "slideDownBar","slideBar")+'</div></div><div id="toggleViewerButton">'+googleMaps.displayHTMLImage("slideBar.png", "slideLeftBar","slideBar")+'</div>');
+					$("#viewer360").append('<iframe id="vista360frame" src="'+marker.url+'"></iframe><div id="titleFade"><span class="whiteFade">'+marker.title+'</span></div><div id="titleViewBar"><div id="leftInfoSide"><span id="titleCaptionText" class="titleLocation">'+marker.title+'</p><span id="descriptionCaptiontext">'+marker.description+'</span></span></div><div id="rightInfoSide"><img src="'+window.IMAGE_DOMAIN+'little_gray_marker.png" alt="marker" /><span class="direccio">'+direccio+'<br/>'+ciutat + " " +codiPostal+'</span>'+buttons+'</div></p><div id="toggleCaptionButton">'+googleMaps.displayHTMLImage("slideDownBar.png", "slideDownBar","slideBar")+'</div></div><div id="toggleViewerButton">'+googleMaps.displayHTMLImage("slideBar.png", "slideLeftBar","slideBar")+'</div>');
+					$("#viewer360").attr("class","seixantaAmple");
+					$("#section").attr("class","quarantaAmple");
+					$("#titleFade").fadeIn(2500);
+					$("#titleFade").fadeOut(2500);
 					$("#toggleViewerButton").unbind();
 					$("#toggleViewerButton").click(function(){
 						$("#viewer360").removeClass("seixantaAmple");

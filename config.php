@@ -9,7 +9,7 @@ if ($_GET["MCSD"]=="false"){
 	define("PLUGINS_DOMAIN","http://mashup.farrepuche.com/plugins/");
 	define("UPLOADS_DOMAIN","http://mashup.farrepuche.com/uploads/");
 }
-else if ($_GET["MCSD"]!="false"){
+else if ($_GET["MCSD"]!="false" && $_GET["MCSD"]!="local"){
 	define("API_DOMAIN", "http://api-handler.farrepuche.com/API/");
 	define("BACKEND_DOMAIN", "http://backend-admin.farrepuche.com/backend/");
 	define("MAIN_DOMAIN","http://mashup.farrepuche.com/");
@@ -18,6 +18,16 @@ else if ($_GET["MCSD"]!="false"){
 	define("IMAGE_DOMAIN","http://img.farrepuche.com/img/");
 	define("PLUGINS_DOMAIN","http://plugs.farrepuche.com/plugins/");
 	define("UPLOADS_DOMAIN","http://upload.farrepuche.com/uploads/");
+}
+else if ($_GET["MCSD"]=="local"){
+	define("API_DOMAIN", "http://localhost:8888/API/");
+	define("BACKEND_DOMAIN", "http://localhost:8888/backend/");
+	define("MAIN_DOMAIN","http://localhost:8888/");
+	define("STYLE_DOMAIN","http://localhost:8888/css/");
+	define("SCRIPT_DOMAIN","http://localhost:8888/script/");
+	define("IMAGE_DOMAIN","http://localhost:8888/img/");
+	define("PLUGINS_DOMAIN","http://localhost:8888/plugins/");
+	define("UPLOADS_DOMAIN","http://localhost:8888/uploads/");
 }
 
 ?>

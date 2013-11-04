@@ -196,3 +196,17 @@ span.titleLocation{
 #outDoorButton:hover,#inDoorButton:hover{
 	opacity:1;
 }
+#titleFade{
+	position: absolute;
+	z-index: 111111;
+	left: 0px;
+	top: 200px;
+	padding-top:10px;
+	height: 30px;
+	width: 100%;
+	text-align: center;
+	background-color: rgba(0,0,0,0.5);
+	vertical-align: middle;
+	color:white;
+	display:none;
+}
