@@ -150,11 +150,13 @@ googleMaps = {
 					if (marker.url2){
 						buttons="<div id='inOutDoor'><a href='"+marker.url+"' target='vista360frame'><img id='outDoorButton' src='"+window.IMAGE_DOMAIN+"outHouse.png' title='Exterior' alt='out' /></a><a href='"+marker.url2+"' target='vista360frame'><img src='"+window.IMAGE_DOMAIN+"inHouse.png' id='inDoorButton' title='Interior' alt='in' /></a></div>";
 					}
-					$("#viewer360").append('<iframe id="vista360frame" src="'+marker.url+'"></iframe><div id="titleFade"><span class="whiteFade">'+marker.title+'</span></div><div id="titleViewBar"><div id="leftInfoSide"><span id="titleCaptionText" class="titleLocation">'+marker.title+'</p><span id="descriptionCaptiontext">'+marker.description+'</span></span></div><div id="rightInfoSide"><img src="'+window.IMAGE_DOMAIN+'little_gray_marker.png" alt="marker" /><span class="direccio">'+direccio+'<br/>'+ciutat + " " +codiPostal+'</span>'+buttons+'</div></p><div id="toggleCaptionButton">'+googleMaps.displayHTMLImage("slideDownBar.png", "slideDownBar","slideBar")+'</div></div><div id="toggleViewerButton">'+googleMaps.displayHTMLImage("slideBar.png", "slideLeftBar","slideBar")+'</div>');
+					$("#viewer360").append('<iframe id="vista360frame" src="'+marker.url+'"></iframe><div id="titleFade"><div id="rebot'+marker.idPOI+'"><img src="'+window.IMAGE_DOMAIN+'bigMarker.png" alt="bigmarker"/></div><span class="whiteFade">'+marker.title+'</span></div><div id="titleViewBar"><div id="leftInfoSide"><span id="titleCaptionText" class="titleLocation">'+marker.title+'</p><span id="descriptionCaptiontext">'+marker.description+'</span></span></div><div id="rightInfoSide"><img src="'+window.IMAGE_DOMAIN+'little_gray_marker.png" alt="marker" /><span class="direccio">'+direccio+'<br/>'+ciutat + " " +codiPostal+'</span>'+buttons+'</div></p><div id="toggleCaptionButton">'+googleMaps.displayHTMLImage("slideDownBar.png", "slideDownBar","slideBar")+'</div></div><div id="toggleViewerButton">'+googleMaps.displayHTMLImage("slideBar.png", "slideLeftBar","slideBar")+'</div>');
 					$("#viewer360").attr("class","seixantaAmple");
 					$("#section").attr("class","quarantaAmple");
-					$("#titleFade").fadeIn(2500);
-					$("#titleFade").fadeOut(2500);
+					$("#titleFade").fadeIn(2000);
+					window.markerRebot = 'rebot'+marker.idPOI;
+					googleMaps.rebotImatge();
+					$("#titleFade").fadeOut(1300);
 					$("#toggleViewerButton").unbind();
 					$("#toggleViewerButton").click(function(){
 						$("#viewer360").removeClass("seixantaAmple");
@@ -178,6 +180,18 @@ googleMaps = {
 					});
 				}
 			},
+			rebotImatge: function() {
+			    $('#'+window.markerRebot).animate({
+			      marginTop: '+=70',
+			    }, 500, function() {
+			        $('#'+window.markerRebot).animate({
+			          marginTop: '-=70',
+			        }, 500, function() {
+			            googleMaps.rebotImatge()
+			        });
+			    });
+			},
+
 			linkListMarker: function(){
 				$.each(googleMaps.markerArray, function(index,value){
 					googleMaps.infowindow = new google.maps.InfoWindow({
@@ -188,6 +202,7 @@ googleMaps = {
 					var infowindow= googleMaps.infowindow;
 					googleMaps.infoWindowListArray.push(infowindow);
 					$("."+value.id).click(function() {
+							$('#'+window.markerRebot).stop(true);
 							googleMaps.closeInfoWindows();
 						    infowindow.open(googleMaps.map,value);
 						    if ($("#viewer360").hasClass("seixantaAmple") && $("#titleCaptionText").text() == value.title) {				
