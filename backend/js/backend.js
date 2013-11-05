@@ -271,7 +271,7 @@ backend = {
 							   if(window.fileUploadedName){
 							   		minilogo=idPOI+"."+window.fileUploadedName.split(".")[1];
 							   }
-							   var POIObject={POI_id:idPOI,POI_name:name,POI_description:description,POI_telefon:telefon,POI_email:email,POI_postal:postal,POI_ciutat:'lleida',POI_codi_postal:'25003',POI_web:urlPOI,POI_latitude:backend.latitude,POI_longitude:backend.longitude,POI_360url:window.UPLOADS_DOMAIN+'360POIView/'+idPOI,POI_mini_logo:minilogo};
+							   var POIObject={POI_id:idPOI,POI_name:name,POI_description:description,POI_telefon:telefon,POI_email:email,POI_postal:postal,POI_ciutat:'lleida',POI_codi_postal:'25003',POI_web:urlPOI,POI_latitude:backend.latitude,POI_longitude:backend.longitude,POI_360url:'360POIView/'+idPOI,POI_mini_logo:minilogo};
 							  backend.getWS("post",POIObject,"afegir_POI",
 							function(data){
 								var n = noty({text: "El POI: "+name+" s'ha afegit correctament", timeout:"3000", type:"success"});
