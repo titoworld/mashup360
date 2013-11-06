@@ -35,7 +35,7 @@
 <!--[if IE 7]>    <html class="lt-ie9 lt-ie8" lang="en"> <![endif]-->
 <!--[if IE 8]>    <html class="lt-ie9" lang="en"> <![endif]-->
 <!--[if gt IE 8]><!--><html lang="en"><!--<![endif]-->
-<script>window.usuari=<? echo $_GET['user']; ?></script>
+<script>window.usuari="<? echo $_GET['user']; ?>";</script>
   <?php 
     $section = "login";
     if(isset($_GET["section"])) {
