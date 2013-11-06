@@ -131,6 +131,24 @@ $app->get('/cerca_POI_URL/:POI', function($POI) use ($app, $db) {
     	 echo wsResponse("login", $responseData);
     
 });
+//givemyhash
+	$app->post("/giveMyHash", function () use($app, $db) {
+	$app->response()->header("Content-Type", "application/json");
+   $post = $app->request()->post();
+    if(!isset($post['usuari'])) {
+    	echo wsError(_("Usuari no facilitat"));
+	    return;
+    }
+   	$user =$post['usuari'];
+	$result = UserController::giveMyHash($user);
+     	 if(!$result) {
+	    	 echo wsError(_("Error generating token"));
+	    	 return;
+    	 }
+    	 $responseData["hash"]=$result["token"];
+    	 $responseData["expire"]=$result["tokenExpire"];
+    	 echo wsResponse("token", $responseData);
+ });
 
 //arranca l'aplicacio
 $app->run();

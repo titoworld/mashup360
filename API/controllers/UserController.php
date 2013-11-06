@@ -62,6 +62,12 @@ class UserController {
 	    $user["lastLogin"]=date("Y-m-d H:i:s ",time());
 	    $user->update();
     }
+    static function giveMyHash($username){
+    $user = DbController::getInstance()->dbManager->usuaris("nom_usuari= ?", $username)->fetch();
+    if(!$user)
+		return NULL;
+	return $user;
+    }
 
     static function checkToken($username, $token) {
     
