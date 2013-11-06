@@ -51,7 +51,7 @@
             break;
         case "POIS":
             include('inc/header.php');
-            include("inc/".$_GET["section"].".php");
+            include("inc/".$_GET["section"].".php?user=".$_GET['user']);
             include 'inc/POISBox.php';
             include 'inc/newPOI.php';
         break;
