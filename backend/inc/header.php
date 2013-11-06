@@ -85,7 +85,7 @@ include("../config.php");
                                 
                                 	<li id="camposLi" class="active">
                                     	<span title="Table">
-                                            <a id="camposLink" href="admin.php?section=POIS&user="<? echo $_GET['user']; ?>">"
+                                            <a id="camposLink" href="">
                                     		<i class="icon-globe"></i>
 											<span class="nav-title">POIs</span></a>
                                         </span>
@@ -94,7 +94,7 @@ include("../config.php");
                                     </li>
                                 		<li id="usuariosLi">
                                     	<span title="General">
-                                            <a id="usuariosLink" href="admin.php?section=users&user="<? echo $_GET['user']; ?>">"
+                                            <a id="usuariosLink" href="">
                                     		<i class="icon-users"></i>
 											<span class="nav-title">Usuaris</span></a>
                                         </span>

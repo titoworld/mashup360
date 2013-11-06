@@ -185,6 +185,9 @@ backend = {
 	init: function(){
 		var geocoder = new google.maps.Geocoder();
 		backend.hash = window.hash;
+		backend.usuari=window.usuari;
+		$("#usuariosLink").attr("href","admin.php?section=users&user="+backend.usuari);
+		$("#camposLink").attr("href","admin.php?section=POIS&user="+backend.usuari);
 		$('#prevImg').attr('src', window.IMAGE_DOMAIN+'placeholder.png');
 		$("#logoField").unbind();
    		$("#logoField").change(function(){
