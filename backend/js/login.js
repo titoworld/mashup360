@@ -71,7 +71,7 @@ login = {
 							  url: "sessionController.php", //guardem el hash del usuari (generat al servidor, a una sessio)
 							  data: {userHash:data.login.hash},
 							  success: function(data, status){
-							 	 window.location.href = 'admin.php?section=POIS';
+							 	 window.location.href = 'admin.php?section=POIS&user='+user;
 							  },
 							  error:function(error){
 								  console.log(error);

@@ -1,10 +1,32 @@
 <? session_start();
-	if(!$_SESSION['userHash'])
+    include '../config.php';
+    date_default_timezone_set('Europe/Andorra');
+    $postdata = http_build_query(
+        array (
+        'usuari'=>$_GET['user']
+        )
+    );
+    $opts= array('http' =>
+        array(
+            'method' => 'POST',
+            'header' => 'Content-type: application/x-www-form-urlencoded',
+            'content' => $postdata
+            )
+        );
+    $context = stream_context_create($opts);
+    $json=file_get_contents(API_DOMAIN.'giveMyHash',false,$context);
+    $data=json_decode($json);
+    $now=strtotime(date("Y-m-d H:i:s",time()));
+    $expiration=strtotime($data->token->expire);
+    if ($now > $expiration){
+        echo '<META HTTP-EQUIV="Refresh" Content="0; URL=index.php">'; 
+    }
+	if($_SESSION['userHash']!=$data->token->hash)
 		{
-		header("Location: index.php");
+		echo '<META HTTP-EQUIV="Refresh" Content="0; URL=index.php">';
 		}
 	else if(!$_GET["section"]){
-	$userHash=  $_SESSION['login_hash'];
+	$userHash=  $_SESSION['user_hash'];
 	session_destroy();
 	}
 ?>
