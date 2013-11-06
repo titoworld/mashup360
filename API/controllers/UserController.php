@@ -15,10 +15,12 @@ class UserController {
 	    if ($serverHash !=$password){
 		    return NULL;
 	    }
+	    date_default_timezone_set('Europe/Andorra');
 	    $ts = strftime("%s");
 	    $newToken = md5($user["email"]."-".$ts);
 	    $user["token"]=$newToken;   
-	    date_default_timezone_set('Europe/Andorra');
+	    $expireDate=date("Y-m-d H:i:s",strtotime("+1 Hour"));
+	    $user["tokenExpire"]=$expireDate;  
 	    $user["lastLogin"]=date("Y-m-d H:i:s",time());
 	    $user->update();
 	    return $user;
@@ -31,9 +33,7 @@ class UserController {
 	    $ts = strftime("%s");
 	    $dateCryp= md5(date("Y-m-d H:i:s",time()));
 	    $newToken = sha1($dateCryp."-".$ts);
-	    $privateToken = sha1(md5($newToken));
 	    $user["token"]=$newToken;  
-	    $user["lastLogin"]=date("Y-m-d H:i:s",time()); 
 	    $user->update();
 	    return $user;
 
