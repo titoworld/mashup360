@@ -1,21 +1,9 @@
 <? session_start();
     include '../config.php';
+    include 'POSTCLASS.php';
     date_default_timezone_set('Europe/Andorra');
-    $postdata = http_build_query(
-        array (
-        'usuari'=>$_GET['user']
-        )
-    );
-    $opts= array('http' =>
-        array(
-            'method' => 'POST',
-            'header' => 'Content-type: application/x-www-form-urlencoded',
-            'content' => $postdata
-            )
-        );
-    $context = stream_context_create($opts);
-    $json=file_get_contents(API_DOMAIN.'giveMyHash',false,$context);
-    $data=json_decode($json);
+    $post=new POST_PHP;
+    $data=$post->posting('giveMyHash',array('usuari'=>$_GET['user']));
     $now=strtotime(date("Y-m-d H:i:s",time()));
     $expiration=strtotime($data->token->expire);
     if ($now > $expiration){
