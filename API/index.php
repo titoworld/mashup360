@@ -36,9 +36,14 @@ $app->get("/llista_POIs", function () use($app, $db) {
      echo wsResponse("llistaPOI", $responseData);
 });
 //llistar usuaris
-$app->get("/llista_usuaris", function () use($app, $db) {
+$app->post("/llista_usuaris", function () use($app, $db) {
 	$app->response()->header("Content-Type", "application/json");
 	$post = $app->request()->post();
+	if(!isset($post['requestHash'])) {
+		echo wsError(_("Falta el requestHash"));
+		return;
+	}
+	$user=$post["usuari"];
 	$result = UserController::listUsers();
 	 if(!$result) {
 	    	 echo wsError(_("Error llistant els usuaris"));
@@ -100,12 +105,17 @@ $app->get('/cerca_POI_URL/:POI', function($POI) use ($app, $db) {
 	$app->post("/getPublicKey", function () use($app, $db) {
 	$app->response()->header("Content-Type", "application/json");
     $post = $app->request()->post();
-    $result = UserController::generateToken();
+     if(!isset($post['usuari'])) {
+     	 echo wsError(_("User not provided"));
+   		return;
+   	}
+    $usuari=$post['usuari'];
+    $result = UserController::generateToken($usuari);
      	 if(!$result) {
 	    	 echo wsError(_("Error generating token"));
 	    	 return;
     	 }
-    	 $responseData["hash"]=$result["token"];
+    	 $responseData["hash"]=$result["publicKey"];
     	 echo wsResponse("publicKey", $responseData);
     
 });

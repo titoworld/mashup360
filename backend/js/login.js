@@ -59,7 +59,7 @@ login = {
 			var user = $("#input-username").val();
 			var passw;
 			//solicitem la clau publica
-			login.getWS("post",null,"getPublicKey",
+			login.getWS("post",{usuari: user},"getPublicKey",
 			function(data){
 					passw= md5($("#input-password").val()+"-"+data.publicKey.hash); //fem un hash am el passw i la clau publica
 					login.getWS("post",{usuari:user, contrasenya:passw},

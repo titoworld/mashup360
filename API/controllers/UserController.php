@@ -3,14 +3,10 @@
 class UserController {
     //genera un token/hash amb el segon de temps actual i l'email de l'usuari i actualitza el expire time del token
     static function login($username,$password) {
-     $user = DbController::getInstance()->dbManager->publicKey("id= ?", 1)->fetch();
-        if(!$user)
-	    	return NULL;
-	$token = $user["token"];
     $user = DbController::getInstance()->dbManager->usuaris("nom_usuari= ?", $username)->fetch();
- 
         if(!$user)
 	    	return NULL;
+	    $token = $user["publicKey"];
 	    $serverHash = md5($user["clau_acces"]."-".$token);
 	    if ($serverHash !=$password){
 		    return NULL;
@@ -25,15 +21,15 @@ class UserController {
 	    $user->update();
 	    return $user;
     }
-    static function generateToken(){
+    static function generateToken($usuari){
         date_default_timezone_set('Europe/Andorra');
-	    $user = DbController::getInstance()->dbManager->publicKey("id= ?", 1)->fetch();
+	    $user = DbController::getInstance()->dbManager->usuaris("nom_usuari= ?", $usuari)->fetch();
         if(!$user)
 	    	return NULL;
 	    $ts = strftime("%s");
 	    $dateCryp= md5(date("Y-m-d H:i:s",time()));
 	    $newToken = sha1($dateCryp."-".$ts);
-	    $user["token"]=$newToken;  
+	    $user["publicKey"]=$newToken;  
 	    $user->update();
 	    return $user;
 
@@ -70,23 +66,17 @@ class UserController {
     }
 
     static function checkToken($username, $token) {
-    
-    	if($username == UserController::$daemon_user && $token == UserController::$daemon_pass )
-    		return TRUE;
-    
     	$dataNow = date("Y-m-d H:i:s ",time());
-    	
     	error_log("DATA NOW: ".$dataNow);
-    
-	    $user = DbController::getInstance()->dbManager->users("email = ? AND token = ? and tokenExpire > ?", $username, $token, $dataNow)->fetch();
-	    
-	    if(!$user)
+    	$user = DbController::getInstance()->dbManager->usuaris("nom_usuari= ?", $username)->fetch();
+	   	 if(!$user)
 	    	return NULL;
-	    else {
-	    	$user["tokenExpire"]=UserController::getNewTokenExpireTime();
-	    	$user->update();
-		    return $user;   
-	    }
+	  	$token_original= $user["token"];
+	  	$serverHash = sha1($token_original .'-'. $user["publicKey"]);
+	  	if ($token!=$serverHash){
+	  		return NULL;
+	  	}
+	  	
     }  
 }
 
