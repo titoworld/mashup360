@@ -19,11 +19,13 @@
     $now=strtotime(date("Y-m-d H:i:s",time()));
     $expiration=strtotime($data->token->expire);
     if ($now > $expiration){
-        echo '<META HTTP-EQUIV="Refresh" Content="0; URL=index.php">'; 
+        echo '<META HTTP-EQUIV="Refresh" Content="1; URL=index.php">'; 
+        die("Token has expire");
     }
 	if($_SESSION['userHash']!=$data->token->hash)
 		{
-		echo '<META HTTP-EQUIV="Refresh" Content="0; URL=index.php">';
+		echo '<META HTTP-EQUIV="Refresh" Content="1; URL=index.php">';
+        die("Invalid Hash");
 		}
 	else if(!$_GET["section"]){
 	$userHash=  $_SESSION['user_hash'];
